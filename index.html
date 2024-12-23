@@ -346,15 +346,106 @@
             transform: scale(1.1);
             background: #45a049;
         }
+
+        /* Add to your existing styles section */
+        .pricing-tiers {
+            margin: 2rem 0;
+        }
+
+        .tier-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .tier-option {
+            flex: 1;
+            min-width: 250px;
+            padding: 20px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tier-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .tier-option.popular {
+            border-color: #4CAF50;
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.2);
+            animation: pulseGlow 2s infinite;
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            background: #4CAF50;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .tier-option h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .tier-option .price {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .tier-option .original-price {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 0.8em;
+            margin-right: 10px;
+        }
+
+        .tier-option .sale-price {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .tier-option ul {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+            text-align: left;
+        }
+
+        .tier-option ul li {
+            margin: 10px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .tier-option ul li:before {
+            content: "✓";
+            color: #4CAF50;
+            position: absolute;
+            left: 0;
+        }
+
+        .tier-option.selected {
+            border-color: #4CAF50;
+            background: #f8fff8;
+        }
     </style>
 </head>
 <body>
     <div class="holiday-banner">
         <div class="sale-text">🎄 HOLIDAY SALE! 40% OFF! 🎄</div>
-        <div>
-            <span class="original-price">$100</span>
-            <span class="sale-price">$60</span>
-        </div>
         <div style="font-size: 1.2em; margin-top: 10px;">Limited Time Offer! Order Now! 🎅</div>
     </div>
 
@@ -442,16 +533,53 @@
                                 <input type="email" id="email" name="email" required>
                             </div>
 
-                            <div class="form-group">
-                                <label for="design-type">Type of Design Needed</label>
-                                <select id="design-type" name="design-type" required>
-                                    <option value="">Select Design Type</option>
-                                    <option value="logo">Logo Design</option>
-                                    <option value="poster">Poster Design</option>
-                                    <option value="social">Social Media Graphics</option>
-                                    <option value="business">Business Cards</option>
-                                    <option value="other">Other</option>
-                                </select>
+                            <div class="form-group pricing-tiers">
+                                <label>Select Your Package</label>
+                                <div class="tier-container">
+                                    <div class="tier-option" onclick="selectTier('basic')">
+                                        <h3>Basic</h3>
+                                        <div class="price">
+                                            <span class="original-price">$10</span>
+                                            <span class="sale-price">$6</span>
+                                        </div>
+                                        <p>Quick & Simple Designs</p>
+                                        <ul>
+                                            <li>Single design</li>
+                                            <li>Basic modifications</li>
+                                            <li>24-hour delivery</li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="tier-option popular" onclick="selectTier('standard')">
+                                        <div class="popular-badge">POPULAR</div>
+                                        <h3>Standard</h3>
+                                        <div class="price">
+                                            <span class="original-price">$20</span>
+                                            <span class="sale-price">$12</span>
+                                        </div>
+                                        <p>Professional Logos & Designs</p>
+                                        <ul>
+                                            <li>2-3 design concepts</li>
+                                            <li>Unlimited revisions</li>
+                                            <li>3-day delivery</li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="tier-option" onclick="selectTier('premium')">
+                                        <h3>Premium</h3>
+                                        <div class="price">
+                                            <span class="original-price">$40</span>
+                                            <span class="sale-price">$24</span>
+                                        </div>
+                                        <p>Large Projects (4-10 Designs)</p>
+                                        <ul>
+                                            <li>4-10 unique designs</li>
+                                            <li>Priority support</li>
+                                            <li>5-day delivery</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="selected-tier" name="selected-tier" required>
                             </div>
 
                             <div class="form-group">
@@ -750,6 +878,40 @@
                 this.style.opacity = '1'; // Ensure full opacity when typing
             }
         });
+    </script>
+
+    <script>
+        function selectTier(tier) {
+            // Remove selected class from all tiers
+            document.querySelectorAll('.tier-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked tier
+            const selectedTier = document.querySelector(`.tier-option:nth-child(${
+                tier === 'basic' ? '1' : tier === 'standard' ? '2' : '3'
+            })`);
+            selectedTier.classList.add('selected');
+            
+            // Update hidden input
+            document.getElementById('selected-tier').value = tier;
+            
+            // Update current price based on selection
+            switch(tier) {
+                case 'basic':
+                    currentPrice = 6; // $10 with 40% off
+                    break;
+                case 'standard':
+                    currentPrice = 12; // $20 with 40% off
+                    break;
+                case 'premium':
+                    currentPrice = 24; // $40 with 40% off
+                    break;
+            }
+            
+            // Enable next button if form is complete
+            checkFormCompletion();
+        }
     </script>
 </body>
 </html>
