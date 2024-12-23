@@ -236,6 +236,116 @@
         #payment-step {
             transition: opacity 0.5s ease;
         }
+
+        /* Add this to your existing styles */
+        #message {
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        /* Update the style to only affect placeholder */
+        #message::placeholder {
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        /* Add this to your existing styles */
+        @keyframes fadeInOut {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        #message::placeholder {
+            animation: fadeInOut 1s ease-in-out;
+        }
+
+        /* Add these styles to your existing styles */
+        .policy-section {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .policy-section:last-child {
+            border-bottom: none;
+        }
+
+        .policy-section h4 {
+            color: #006400;
+            margin-bottom: 15px;
+        }
+
+        .policy-section h5 {
+            color: #333;
+            margin: 15px 0 10px 0;
+        }
+
+        .policy-section p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .policy-section ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .policy-section ul li {
+            margin-bottom: 5px;
+        }
+
+        /* Add these styles */
+        @keyframes priceChange {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        #new-price {
+            color: #4CAF50;
+            font-weight: bold;
+            animation: priceChange 0.5s ease-in-out;
+        }
+
+        #original-price.strikethrough {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 18px;
+        }
+
+        /* Add these animations to your styles */
+        @keyframes pulseGlow {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 20px 10px rgba(76, 175, 80, 0.2);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4);
+            }
+        }
+
+        .free-order-btn {
+            background: #4CAF50;
+            color: white;
+            padding: 20px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            margin: 30px auto;
+            display: block;
+            transition: all 0.3s ease;
+            animation: pulseGlow 2s infinite;
+        }
+
+        .free-order-btn:hover {
+            transform: scale(1.1);
+            background: #45a049;
+        }
     </style>
 </head>
 <body>
@@ -346,8 +456,21 @@
 
                             <div class="form-group">
                                 <label for="message">Project Details</label>
-                                <textarea id="message" name="message" required 
-                                    placeholder="Please describe your project needs..."></textarea>
+                                <textarea id="message" name="message" required></textarea>
+                            </div>
+
+                            <div id="promo-section" style="margin: 20px 0; text-align: center;">
+                                <div class="form-group">
+                                    <label for="promo-code">Have a Promo Code?</label>
+                                    <div style="display: flex; justify-content: center; gap: 10px;">
+                                        <input type="text" id="promo-code" placeholder="Enter code" style="width: 150px;">
+                                        <button type="button" onclick="applyPromoCode()" style="width: auto;">Apply</button>
+                                    </div>
+                                </div>
+                                <div id="price-display" style="margin-top: 15px; font-size: 24px;">
+                                    <span id="original-price">$60</span>
+                                    <span id="new-price" style="display: none;"></span>
+                                </div>
                             </div>
 
                             <div style="text-align: center; margin-top: 20px;">
@@ -366,6 +489,47 @@
 
                 <div class="contact-info" style="margin-top: 20px; text-align: center;">
                     <p>Questions? Email me at: bennyf12581@gmail.com</p>
+                    
+                    <div id="policies" style="margin-top: 30px; font-size: 12px; color: #666; text-align: left;">
+                        <details>
+                            <summary style="cursor: pointer; margin-bottom: 10px;">View Policies</summary>
+                            
+                            <div class="policy-section">
+                                <h4>Shipping Policy</h4>
+                                <p>Please allow for 7 days to fulfil your order and an additional 3-5 shipping days on priority shipping. For any digital products, they should be delivered to your attached email. If you don't receive any documents within the next 7 days, check your junk mail. If you still haven't received anything then contact me at bennyf12581@gmail.com. This is a general baseline, not an official shipping deadline.</p>
+                            </div>
+
+                            <div class="policy-section">
+                                <h4>Lost in the Mail</h4>
+                                <p>Please note that I am not responsible for any packages that get lost at shipping or stolen packages. However, if something goes wrong during the shipping process, please contact me at bennyf12581@gmail.com and I will do my best to help.</p>
+                            </div>
+
+                            <div class="policy-section">
+                                <h4>Refund Policy</h4>
+                                <p><strong>My policy: ALL SALES ARE FINAL!</strong><br>
+                                For those who don't understand what that means... I do NOT offer refunds!</p>
+                                
+                                <h5>Damages and Issues</h5>
+                                <p>Please thoroughly inspect your order upon reception and contact me IMMEDIATELY if the item is defective, damaged or if you receive the wrong item so that I can evaluate the issue.<br>
+                                (Please note that you might receive an item that is purposely ripped, teared, worn out and/or other distressing methods)</p>
+                                
+                                <h5>Exchange</h5>
+                                <ul>
+                                    <li>I don't offer exchanges because all items sold are limited. If you have need to exchange for a different size, contact me personally at bennyf12581@gmail.com and I will review your request.</li>
+                                    <li>Refunds are only given to damaged products, I am not responsible for any packages lost in the mall.</li>
+                                </ul>
+                                <p>You can always contact me for any return questions at bennyf12581@gmail.com.</p>
+                                
+                                <h5>Exceptions / Non-returnable Items</h5>
+                                <p>PLEASE NOTE: I do not accept ANY refunds on digital products. If you made a mistake while purchasing contact me at bennyf12581@gmail.com and I will do my best to help.<br>
+                                Unfortunately, I cannot accept returns on sale items or gift cards.</p>
+                                
+                                <h5>Accepted Refunds</h5>
+                                <p>If your refund request is accepted, I will notify you once I've received and inspected your return, and let you know if the refund was approved or not. If approved, you'll be automatically refunded on your original payment method within 10 business days. Please remember it can take some time for your bank or credit card company to process and post the refund too.<br><br>
+                                If more than 15 business days have passed since I've approved your return, please contact me at bennyf12581@gmail.com.</p>
+                            </div>
+                        </details>
+                    </div>
                 </div>
             </div>
         </section>
@@ -419,6 +583,40 @@
             }
         }
 
+        let currentPrice = 60; // Add this variable to track the current price
+
+        function applyPromoCode() {
+            const promoInput = document.getElementById('promo-code');
+            const originalPrice = document.getElementById('original-price');
+            const newPrice = document.getElementById('new-price');
+            
+            // Get the promo code and convert to uppercase
+            const code = promoInput.value.toUpperCase();
+            
+            if (code === 'TEST') {
+                // Update current price
+                currentPrice = 0;
+                
+                // Show success animation
+                originalPrice.classList.add('strikethrough');
+                newPrice.textContent = '$0';
+                newPrice.style.display = 'inline-block';
+                
+                // Reset animation
+                newPrice.style.animation = 'none';
+                newPrice.offsetHeight; // Trigger reflow
+                newPrice.style.animation = 'priceChange 0.5s ease-in-out';
+            } else {
+                alert('Invalid promo code');
+                promoInput.value = '';
+                currentPrice = 60; // Reset to original price
+                
+                // Reset price display
+                originalPrice.classList.remove('strikethrough');
+                newPrice.style.display = 'none';
+            }
+        }
+
         function showPaymentStep() {
             if (nextButton.classList.contains('disabled')) {
                 return;
@@ -426,6 +624,42 @@
 
             const formStep1 = document.getElementById('form-step-1');
             const paymentStep = document.getElementById('payment-step');
+            const paypalContainer = document.getElementById('paypal-button-container');
+
+            // Update the payment step title with current price
+            const paymentTitle = paymentStep.querySelector('h3');
+            paymentTitle.textContent = `Complete Your Order - $${currentPrice}`;
+
+            // Handle free orders differently
+            if (currentPrice === 0) {
+                paypalContainer.innerHTML = `
+                    <div style="text-align: center;">
+                        <button onclick="submitFreeOrder()" 
+                                class="free-order-btn">
+                            🎉 Complete Free Order 🎉
+                        </button>
+                    </div>
+                `;
+            } else {
+                // Regular PayPal button for paid orders
+                paypal.Buttons({
+                    createOrder: function(data, actions) {
+                        return actions.order.create({
+                            purchase_units: [{
+                                amount: {
+                                    value: currentPrice.toFixed(2)
+                                },
+                                description: 'Design Project'
+                            }]
+                        });
+                    },
+                    onApprove: function(data, actions) {
+                        return actions.order.capture().then(function(details) {
+                            submitOrder(details.payer.name.given_name);
+                        });
+                    }
+                }).render('#paypal-button-container');
+            }
 
             formStep1.style.opacity = '0';
             setTimeout(() => {
@@ -437,38 +671,85 @@
             }, 300);
         }
 
+        function submitFreeOrder() {
+            const formData = new FormData(document.getElementById('orderForm'));
+            fetch('https://formspree.io/f/mjkkblaz', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            }).then(response => {
+                alert('Order completed! Thank you for your order.');
+                document.getElementById('orderForm').reset();
+                location.reload();
+            });
+        }
+
+        function submitOrder(name) {
+            const formData = new FormData(document.getElementById('orderForm'));
+            fetch('https://formspree.io/f/mjkkblaz', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            }).then(response => {
+                alert('Order completed! Thank you ' + name);
+                document.getElementById('orderForm').reset();
+                location.reload();
+            });
+        }
+
         function handleSubmit(event) {
             event.preventDefault();
         }
+    </script>
 
-        paypal.Buttons({
-            createOrder: function(data, actions) {
-                return actions.order.create({
-                    purchase_units: [{
-                        amount: {
-                            value: '60.00'
-                        },
-                        description: 'Design Project'
-                    }]
-                });
-            },
-            onApprove: function(data, actions) {
-                return actions.order.capture().then(function(details) {
-                    const formData = new FormData(document.getElementById('orderForm'));
-                    fetch('https://formspree.io/f/mjkkblaz', {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'Accept': 'application/json'
-                        }
-                    }).then(response => {
-                        alert('Order completed! Thank you ' + details.payer.name.given_name);
-                        document.getElementById('orderForm').reset();
-                        location.reload(); // Refresh the page after successful order
-                    });
-                });
+    <script>
+        const placeholders = [
+            "Create a red and blue logo for my fishing company called 'Big Catch Co.'",
+            "Design a business card for my yoga studio with calming greens and a lotus flower.",
+            "Make a flyer for our Halloween party with spooky vibes and a haunted house theme.",
+            "Create an Instagram post announcing my online boutique's Black Friday sale.",
+            "Design a minimalist menu for my vegan cafe, featuring greens and earthy tones.",
+            // ... all 50 examples ...
+            "Design a cozy and inviting logo for my knitting supply store, 'Warm Threads'."
+        ];
+
+        const messageTextarea = document.getElementById('message');
+
+        function getRandomPlaceholder() {
+            const randomIndex = Math.floor(Math.random() * placeholders.length);
+            return placeholders[randomIndex];
+        }
+
+        function cyclePlaceholder() {
+            // Only cycle if the textarea is empty
+            if (!messageTextarea.value) {
+                // Fade out
+                messageTextarea.style.opacity = '0';
+                
+                // Change placeholder after fade out
+                setTimeout(() => {
+                    messageTextarea.setAttribute('placeholder', getRandomPlaceholder());
+                    // Fade in
+                    messageTextarea.style.opacity = '1';
+                }, 500);
             }
-        }).render('#paypal-button-container');
+        }
+
+        // Change placeholder every 4 seconds
+        cyclePlaceholder(); // Initial placeholder
+        const cycleInterval = setInterval(cyclePlaceholder, 4000);
+
+        // Stop cycling when user starts typing
+        messageTextarea.addEventListener('input', function() {
+            if (this.value) {
+                clearInterval(cycleInterval);
+                this.style.opacity = '1'; // Ensure full opacity when typing
+            }
+        });
     </script>
 </body>
 </html>
