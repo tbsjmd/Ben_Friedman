@@ -980,6 +980,25 @@
                 // Regular PayPal button for paid orders
                 paypal.Buttons({
                     createOrder: function(data, actions) {
+                        // Validate form before creating PayPal order
+                        const form = document.getElementById('orderForm');
+                        const requiredFields = form.querySelectorAll('[required]');
+                        let isValid = true;
+                        
+                        requiredFields.forEach(field => {
+                            if (!field.value.trim()) {
+                                isValid = false;
+                                field.style.borderColor = 'red';
+                            } else {
+                                field.style.borderColor = '';
+                            }
+                        });
+                        
+                        if (!isValid) {
+                            alert('Please fill in all required fields');
+                            return;
+                        }
+
                         return actions.order.create({
                             purchase_units: [{
                                 amount: {
@@ -992,18 +1011,18 @@
                     onApprove: function(data, actions) {
                         return actions.order.capture()
                             .then(function(details) {
-                                // Ensure we have the payer's name
+                                console.log('PayPal payment completed:', details);
                                 const name = details.payer.name?.given_name || 'Customer';
                                 submitOrder(name);
                             })
                             .catch(function(error) {
                                 console.error('PayPal Capture Error:', error);
-                                alert('There was an error processing your payment. Please try again or contact us directly.');
+                                alert('There was an error processing your payment. Please try again or contact bennyf12581@gmail.com directly.');
                             });
                     },
                     onError: function(err) {
                         console.error('PayPal Error:', err);
-                        alert('There was an error with PayPal. Please try again or contact us directly.');
+                        alert('There was an error with PayPal. Please try again or contact bennyf12581@gmail.com directly.');
                     }
                 }).render('#paypal-button-container');
             }
@@ -1027,31 +1046,73 @@
             submitButton.disabled = true;
             submitButton.textContent = 'Submitting...';
 
+            // Log form data for debugging
+            console.log('Submitting form data...');
+
+            // Ensure the drawing data is properly formatted
+            const drawingData = document.getElementById('drawing-data').value;
+            if (drawingData) {
+                try {
+                    // Convert the drawing to a Blob and append it
+                    fetch(drawingData)
+                        .then(res => res.blob())
+                        .then(blob => {
+                            formData.append('drawing', blob, 'drawing.png');
+                            sendFormData(formData, submitButton);
+                        })
+                        .catch(error => {
+                            console.error('Drawing conversion error:', error);
+                            // Continue with form submission even if drawing fails
+                            sendFormData(formData, submitButton);
+                        });
+                } catch (error) {
+                    console.error('Drawing processing error:', error);
+                    // Continue with form submission even if drawing fails
+                    sendFormData(formData, submitButton);
+                }
+            } else {
+                // No drawing to process, send form directly
+                sendFormData(formData, submitButton);
+            }
+        }
+
+        function sendFormData(formData, submitButton) {
+            // Add timestamp to prevent caching
+            formData.append('timestamp', new Date().getTime());
+
             fetch('https://formspree.io/f/mjkkblaz', {
                 method: 'POST',
                 body: formData,
                 headers: {
-                    'Accept': 'application/json'
-                }
+                    'Accept': 'application/json',
+                    'Cache-Control': 'no-cache'
+                },
+                mode: 'cors'
             })
             .then(response => {
+                console.log('Response status:', response.status);
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    return response.text().then(text => {
+                        throw new Error(`Server responded with ${response.status}: ${text}`);
+                    });
                 }
                 return response.json();
             })
             .then(data => {
+                console.log('Success:', data);
                 alert('Order completed! Thank you for your order.');
                 form.reset();
-                window.location.reload();
+                window.location.href = window.location.pathname; // Safer than reload()
             })
             .catch(error => {
-                console.error('Error:', error);
-                alert('There was an error submitting your order. Please try again or contact us directly.');
+                console.error('Submission error:', error);
+                alert('There was an error submitting your order. Please try again or contact us directly at bennyf12581@gmail.com');
             })
             .finally(() => {
-                submitButton.disabled = false;
-                submitButton.textContent = '🎉 Complete Free Order 🎉';
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.textContent = '🎉 Complete Free Order 🎉';
+                }
             });
         }
 
@@ -1059,32 +1120,13 @@
             const form = document.getElementById('orderForm');
             const formData = new FormData(form);
             
-            // Add payment confirmation
+            // Add payment confirmation and timestamp
             formData.append('payment_status', 'paid');
             formData.append('customer_name', name);
+            formData.append('timestamp', new Date().getTime());
 
-            fetch('https://formspree.io/f/mjkkblaz', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json'
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                alert('Order completed! Thank you ' + name);
-                form.reset();
-                window.location.reload();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('There was an error submitting your order. Please try again or contact us directly.');
-            });
+            console.log('Submitting paid order...');
+            sendFormData(formData, null);
         }
 
         function handleSubmit(event) {
