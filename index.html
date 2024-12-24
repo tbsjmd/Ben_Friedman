@@ -111,7 +111,6 @@
         }
 
         .slides {
-            display: none;
             position: absolute;
             width: 100%;
             height: 100%;
@@ -119,7 +118,8 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             border-radius: 8px;
             opacity: 0;
-            transition: opacity 0.5s ease-in-out;
+            visibility: hidden;
+            transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
         }
 
         .slides img {
@@ -131,8 +131,8 @@
         }
 
         .slides.active {
-            display: block;
             opacity: 1;
+            visibility: visible;
         }
 
         .slides .watermark {
@@ -641,26 +641,32 @@
                 </div>
 
                 <div class="slides">
-                    <img src="./images/IMG_0515.JPG" alt="Design Project">
+                    <img src="./images/IMG_0534.JPG" alt="Design Project">
                     <div class="watermark">Ben Friedman</div>
                 </div>
 
                 <div class="slides">
-                    <img src="./images/IMG_0516.JPG" alt="Design Project">
+                    <img src="./images/IMG_0535.JPG" alt="Design Project">
                     <div class="watermark">Ben Friedman</div>
                 </div>
 
                 <div class="slides">
-                    <img src="./images/IMG_0518.JPG" alt="Design Project">
+                    <img src="./images/IMG_0538.JPG" alt="Design Project">
                     <div class="watermark">Ben Friedman</div>
                 </div>
 
                 <div class="slides">
-                    <img src="./images/IMG_0519.JPG" alt="Design Project">
+                    <img src="./images/IMG_0540.JPG" alt="Design Project">
+                    <div class="watermark">Ben Friedman</div>
+                </div>
+
+                <div class="slides">
+                    <img src="./images/IMG_0543.JPG" alt="Design Project">
                     <div class="watermark">Ben Friedman</div>
                 </div>
 
                 <div class="dots-container">
+                    <span class="dot"></span>
                     <span class="dot"></span>
                     <span class="dot"></span>
                     <span class="dot"></span>
@@ -881,7 +887,6 @@
             if (slideIndex > slides.length) {slideIndex = 1}
             
             // Add active class to current slide and dot
-            slides[slideIndex-1].style.display = "block";
             slides[slideIndex-1].classList.add("active");
             dots[slideIndex-1].classList.add("active");
             
