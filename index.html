@@ -6,6 +6,7 @@
     <title>Ben Friedman - Graphic Designer</title>
     <link rel="stylesheet" href="benstyles.css">
     <script src="https://www.paypal.com/sdk/js?client-id=AfltB4uw8yBwhk-hQ6eIARUrlfFAzqMYC9a54Q53MGiTQ-vXLUJTfO1se8w6zmFkzJo5tFN7D3qKOG2x&currency=USD"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         /* Updated header and nav styles */
         header {
@@ -594,6 +595,56 @@
         .save-drawing-btn:hover {
             background: #45a049;
         }
+
+        .success-message {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.2);
+            text-align: center;
+            z-index: 1000;
+            animation: popIn 0.5s ease-out;
+        }
+
+        .success-message h2 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+
+        .success-message p {
+            margin-bottom: 30px;
+            color: #666;
+        }
+
+        .success-message button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .success-message button:hover {
+            background: #45a049;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: translate(-50%, -50%) scale(0.5);
+                opacity: 0;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 <body>
@@ -746,53 +797,6 @@
                                 <textarea id="message" name="message" required></textarea>
                             </div>
 
-                            <div class="form-group">
-                                <label for="reference-images">
-                                    Reference Images (Optional)
-                                    <span style="font-size: 0.8em; color: #666;">
-                                        - Upload up to 3 images for reference
-                                    </span>
-                                </label>
-                                <div class="file-upload-container">
-                                    <input type="file" 
-                                           id="reference-images" 
-                                           name="reference-images[]" 
-                                           accept="image/*" 
-                                           multiple 
-                                           onchange="handleFileSelect(event)"
-                                           style="display: none;">
-                                    <button type="button" 
-                                            class="upload-btn" 
-                                            onclick="document.getElementById('reference-images').click()">
-                                        📎 Add Images
-                                    </button>
-                                    <div id="file-list" class="file-list"></div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="drawing-canvas">
-                                    Draw a Rough Draft! (Optional)
-                                    <span style="font-size: 0.8em; color: #666;">
-                                        - Click and drag to draw
-                                    </span>
-                                </label>
-                                <div class="drawing-container">
-                                    <div class="color-palette">
-                                        <button class="color-btn" style="background: #000000" data-color="#000000"></button>
-                                        <button class="color-btn" style="background: #ff0000" data-color="#ff0000"></button>
-                                        <button class="color-btn" style="background: #00ff00" data-color="#00ff00"></button>
-                                        <button class="color-btn" style="background: #0000ff" data-color="#0000ff"></button>
-                                        <button class="color-btn" style="background: #ffff00" data-color="#ffff00"></button>
-                                        <button class="eraser-btn" data-color="#ffffff">🧹</button>
-                                        <button class="clear-btn">Clear</button>
-                                    </div>
-                                    <canvas id="drawing-canvas" width="600" height="400"></canvas>
-                                    <button type="button" class="save-drawing-btn" onclick="saveDrawing()">Done Drawing</button>
-                                    <input type="hidden" id="drawing-data" name="drawing">
-                                </div>
-                            </div>
-
                             <div id="promo-section" style="margin: 20px 0; text-align: center;">
                                 <div class="form-group">
                                     <label for="promo-code">Have a Promo Code?</label>
@@ -868,6 +872,12 @@
             </div>
         </section>
     </main>
+
+    <div class="success-message" id="successMessage">
+        <h2>🎉 Thank You for Your Order! 🎉</h2>
+        <p>We'll be in touch with you soon.</p>
+        <button onclick="window.location.reload()">Place Another Order</button>
+    </div>
 
     <script>
         let slideIndex = 0;
@@ -997,6 +1007,36 @@
             }, 300);
         }
 
+        function showSuccessMessage() {
+            // Trigger confetti
+            const duration = 3000;
+            const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            const interval = setInterval(function() {
+                const timeLeft = animationEnd - Date.now();
+
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+
+                const particleCount = 50 * (timeLeft / duration);
+                
+                // Since particles fall down, start a bit higher than random
+                confetti(Object.assign({}, defaults, { 
+                    particleCount, 
+                    origin: { x: randomInRange(0.1, 0.9), y: Math.random() - 0.2 }
+                }));
+            }, 250);
+
+            // Show success message
+            document.getElementById('successMessage').style.display = 'block';
+        }
+
         function submitFreeOrder() {
             const form = document.getElementById('orderForm');
             
@@ -1011,8 +1051,28 @@
                 submitButton.textContent = 'Submitting...';
             }
 
-            // Use the form's native submit with Formspree
-            form.submit();
+            const formData = new FormData(form);
+
+            fetch('https://formspree.io/f/mjkkblaz', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                showSuccessMessage();
+                form.style.display = 'none';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('There was an error submitting your order. Please email bennyf12581@gmail.com');
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.textContent = '🎉 Complete Free Order 🎉';
+                }
+            });
         }
 
         function submitOrder(name) {
@@ -1023,29 +1083,26 @@
                 return;
             }
 
-            // Add payment info to hidden fields
-            let paymentField = document.getElementById('payment-status');
-            if (!paymentField) {
-                paymentField = document.createElement('input');
-                paymentField.type = 'hidden';
-                paymentField.name = 'payment_status';
-                paymentField.id = 'payment-status';
-                form.appendChild(paymentField);
-            }
-            paymentField.value = 'paid';
+            const formData = new FormData(form);
+            formData.append('payment_status', 'paid');
+            formData.append('customer_name', name);
 
-            let nameField = document.getElementById('customer-name');
-            if (!nameField) {
-                nameField = document.createElement('input');
-                nameField.type = 'hidden';
-                nameField.name = 'customer_name';
-                nameField.id = 'customer-name';
-                form.appendChild(nameField);
-            }
-            nameField.value = name;
-
-            // Submit the form
-            form.submit();
+            fetch('https://formspree.io/f/mjkkblaz', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                showSuccessMessage();
+                form.style.display = 'none';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('There was an error submitting your order. Please email bennyf12581@gmail.com');
+            });
         }
 
         // Update the form HTML to include proper Formspree attributes
@@ -1179,153 +1236,6 @@
             
             // Enable next button if form is complete
             checkFormCompletion();
-        }
-    </script>
-
-    <script>
-        function handleFileSelect(event) {
-            const files = event.target.files;
-            const fileList = document.getElementById('file-list');
-            
-            // Limit to 3 files
-            if (files.length + fileList.children.length > 3) {
-                alert('You can only upload up to 3 images');
-                event.target.value = '';
-                return;
-            }
-
-            // Process each file
-            for (let file of files) {
-                if (!file.type.startsWith('image/')) {
-                    alert('Please upload only image files');
-                    continue;
-                }
-
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const preview = document.createElement('div');
-                    preview.className = 'file-preview';
-                    preview.innerHTML = `
-                        <img src="${e.target.result}" alt="Preview">
-                        <button class="remove-file" onclick="removeFile(this)">×</button>
-                    `;
-                    fileList.appendChild(preview);
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function removeFile(button) {
-            button.parentElement.remove();
-            // Reset file input if all previews are removed
-            if (document.getElementById('file-list').children.length === 0) {
-                document.getElementById('reference-images').value = '';
-            }
-        }
-    </script>
-
-    <script>
-        const canvas = document.getElementById('drawing-canvas');
-        const ctx = canvas.getContext('2d');
-        let isDrawing = false;
-        let currentColor = '#000000';
-
-        // Set canvas size to match display size
-        function resizeCanvas() {
-            const container = canvas.parentElement;
-            canvas.width = container.clientWidth - 30; // Account for padding
-            canvas.height = 400;
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-        }
-
-        // Initialize canvas
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
-
-        // Drawing event listeners
-        canvas.addEventListener('mousedown', startDrawing);
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseup', stopDrawing);
-        canvas.addEventListener('mouseout', stopDrawing);
-
-        // Touch support
-        canvas.addEventListener('touchstart', handleTouch);
-        canvas.addEventListener('touchmove', handleTouch);
-        canvas.addEventListener('touchend', stopDrawing);
-
-        // Color selection
-        document.querySelectorAll('.color-btn, .eraser-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.color-btn, .eraser-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                currentColor = this.dataset.color;
-            });
-        });
-
-        // Clear canvas
-        document.querySelector('.clear-btn').addEventListener('click', function() {
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-        });
-
-        function startDrawing(e) {
-            isDrawing = true;
-            draw(e);
-        }
-
-        function draw(e) {
-            if (!isDrawing) return;
-
-            let x, y;
-            if (e.type.includes('touch')) {
-                const rect = canvas.getBoundingClientRect();
-                x = e.touches[0].clientX - rect.left;
-                y = e.touches[0].clientY - rect.top;
-            } else {
-                x = e.offsetX;
-                y = e.offsetY;
-            }
-
-            ctx.lineWidth = 5;
-            ctx.lineCap = 'round';
-            ctx.strokeStyle = currentColor;
-
-            ctx.lineTo(x, y);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(x, y);
-        }
-
-        function stopDrawing() {
-            isDrawing = false;
-            ctx.beginPath();
-        }
-
-        function handleTouch(e) {
-            e.preventDefault();
-            const touch = e.type === 'touchstart' ? startDrawing : draw;
-            touch(e);
-        }
-
-        function saveDrawing() {
-            // Convert canvas to base64 image data
-            const imageData = canvas.toDataURL('image/png');
-            document.getElementById('drawing-data').value = imageData;
-            
-            // Show preview of saved drawing
-            const fileList = document.getElementById('file-list');
-            const preview = document.createElement('div');
-            preview.className = 'file-preview';
-            preview.innerHTML = `
-                <img src="${imageData}" alt="Drawing">
-                <button class="remove-file" onclick="removeFile(this)">×</button>
-            `;
-            fileList.appendChild(preview);
-            
-            // Clear canvas for next drawing
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
     </script>
 </body>
