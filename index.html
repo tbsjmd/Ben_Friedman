@@ -680,7 +680,7 @@
             <div class="order-container">
                 <div class="order-form">
                     <h2>🎨 Order Graphic Designs 🎨</h2>
-                    <form id="orderForm" onsubmit="handleSubmit(event)" enctype="multipart/form-data">
+                    <form id="orderForm" action="https://formspree.io/f/mjkkblaz" method="POST" enctype="multipart/form-data">
                         <div id="form-step-1">
                             <div class="form-group">
                                 <label for="name">Your Name</label>
@@ -802,7 +802,7 @@
                                     </div>
                                 </div>
                                 <div id="price-display" style="margin-top: 15px; font-size: 24px;">
-                                    <span id="original-price">$60</span>
+                                    <span id="original-price">$0</span>
                                     <span id="new-price" style="display: none;"></span>
                                 </div>
                             </div>
@@ -815,7 +815,7 @@
                         </div>
 
                         <div id="payment-step" style="display: none; opacity: 0;">
-                            <h3 style="text-align: center; margin-bottom: 20px;">Complete Your Order - $60</h3>
+                            <h3 style="text-align: center; margin-bottom: 20px;">Total: $<span id="total-price">0</span></h3>
                             <div id="paypal-button-container"></div>
                         </div>
                     </form>
@@ -919,7 +919,7 @@
             }
         }
 
-        let currentPrice = 60; // Add this variable to track the current price
+        let currentPrice = 0; // Initialize to 0 instead of 60
 
         function applyPromoCode() {
             const promoInput = document.getElementById('promo-code');
@@ -960,77 +960,37 @@
 
             const formStep1 = document.getElementById('form-step-1');
             const paymentStep = document.getElementById('payment-step');
-            const paypalContainer = document.getElementById('paypal-button-container');
+            const totalPriceSpan = document.getElementById('total-price');
 
-            // Update the payment step title with current price
-            const paymentTitle = paymentStep.querySelector('h3');
-            paymentTitle.textContent = `Complete Your Order - $${currentPrice}`;
-
-            // Handle free orders differently
-            if (currentPrice === 0) {
-                paypalContainer.innerHTML = `
-                    <div style="text-align: center;">
-                        <button onclick="submitFreeOrder()" 
-                                class="free-order-btn">
-                            🎉 Complete Free Order 🎉
-                        </button>
-                    </div>
-                `;
-            } else {
-                // Regular PayPal button for paid orders
-                paypal.Buttons({
-                    createOrder: function(data, actions) {
-                        // Validate form before creating PayPal order
-                        const form = document.getElementById('orderForm');
-                        const requiredFields = form.querySelectorAll('[required]');
-                        let isValid = true;
-                        
-                        requiredFields.forEach(field => {
-                            if (!field.value.trim()) {
-                                isValid = false;
-                                field.style.borderColor = 'red';
-                            } else {
-                                field.style.borderColor = '';
-                            }
-                        });
-                        
-                        if (!isValid) {
-                            alert('Please fill in all required fields');
-                            return;
-                        }
-
-                        return actions.order.create({
-                            purchase_units: [{
-                                amount: {
-                                    value: currentPrice.toFixed(2)
-                                },
-                                description: 'Design Project'
-                            }]
-                        });
-                    },
-                    onApprove: function(data, actions) {
-                        return actions.order.capture()
-                            .then(function(details) {
-                                console.log('PayPal payment completed:', details);
-                                const name = details.payer.name?.given_name || 'Customer';
-                                submitOrder(name);
-                            })
-                            .catch(function(error) {
-                                console.error('PayPal Capture Error:', error);
-                                alert('There was an error processing your payment. Please try again or contact bennyf12581@gmail.com directly.');
-                            });
-                    },
-                    onError: function(err) {
-                        console.error('PayPal Error:', err);
-                        alert('There was an error with PayPal. Please try again or contact bennyf12581@gmail.com directly.');
-                    }
-                }).render('#paypal-button-container');
-            }
+            // Update the total price display
+            totalPriceSpan.textContent = currentPrice.toFixed(2);
 
             formStep1.style.opacity = '0';
             setTimeout(() => {
                 formStep1.style.display = 'none';
                 paymentStep.style.display = 'block';
+                
+                // Show appropriate payment option based on price
+                if (currentPrice === 0) {
+                    document.getElementById('paypal-button-container').style.display = 'none';
+                    // Add free order button if it doesn't exist
+                    let freeOrderBtn = paymentStep.querySelector('.free-order-btn');
+                    if (!freeOrderBtn) {
+                        freeOrderBtn = document.createElement('button');
+                        freeOrderBtn.className = 'free-order-btn';
+                        freeOrderBtn.textContent = '🎉 Complete Free Order 🎉';
+                        freeOrderBtn.onclick = submitFreeOrder;
+                        paymentStep.appendChild(freeOrderBtn);
+                    }
+                    freeOrderBtn.style.display = 'block';
+                } else {
+                    document.getElementById('paypal-button-container').style.display = 'block';
+                    const freeOrderBtn = paymentStep.querySelector('.free-order-btn');
+                    if (freeOrderBtn) {
+                        freeOrderBtn.style.display = 'none';
+                    }
+                }
+
                 setTimeout(() => {
                     paymentStep.style.opacity = '1';
                 }, 50);
@@ -1039,124 +999,97 @@
 
         function submitFreeOrder() {
             const form = document.getElementById('orderForm');
-            const formData = new FormData(form);
             
-            // Show loading state
-            const submitButton = document.querySelector('.free-order-btn');
-            submitButton.disabled = true;
-            submitButton.textContent = 'Submitting...';
-
-            // Log form data for debugging
-            console.log('Submitting form data...');
-
-            // Ensure the drawing data is properly formatted
-            const drawingData = document.getElementById('drawing-data').value;
-            if (drawingData) {
-                try {
-                    // Convert the drawing to a Blob and append it
-                    fetch(drawingData)
-                        .then(res => res.blob())
-                        .then(blob => {
-                            formData.append('drawing', blob, 'drawing.png');
-                            sendFormData(formData, submitButton);
-                        })
-                        .catch(error => {
-                            console.error('Drawing conversion error:', error);
-                            // Continue with form submission even if drawing fails
-                            sendFormData(formData, submitButton);
-                        });
-                } catch (error) {
-                    console.error('Drawing processing error:', error);
-                    // Continue with form submission even if drawing fails
-                    sendFormData(formData, submitButton);
-                }
-            } else {
-                // No drawing to process, send form directly
-                sendFormData(formData, submitButton);
+            if (!form.checkValidity()) {
+                alert('Please fill in all required fields');
+                return;
             }
-        }
 
-        function sendFormData(formData, submitButton) {
-            // Add timestamp to prevent caching
-            formData.append('timestamp', new Date().getTime());
+            const submitButton = document.querySelector('.free-order-btn');
+            if (submitButton) {
+                submitButton.disabled = true;
+                submitButton.textContent = 'Submitting...';
+            }
 
-            fetch('https://formspree.io/f/mjkkblaz', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json',
-                    'Cache-Control': 'no-cache'
-                },
-                mode: 'cors'
-            })
-            .then(response => {
-                console.log('Response status:', response.status);
-                if (!response.ok) {
-                    return response.text().then(text => {
-                        throw new Error(`Server responded with ${response.status}: ${text}`);
-                    });
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Success:', data);
-                alert('Order completed! Thank you for your order.');
-                form.reset();
-                window.location.href = window.location.pathname; // Safer than reload()
-            })
-            .catch(error => {
-                console.error('Submission error:', error);
-                alert('There was an error submitting your order. Please try again or contact us directly at bennyf12581@gmail.com');
-            })
-            .finally(() => {
-                if (submitButton) {
-                    submitButton.disabled = false;
-                    submitButton.textContent = '🎉 Complete Free Order 🎉';
-                }
-            });
+            // Use the form's native submit with Formspree
+            form.submit();
         }
 
         function submitOrder(name) {
             const form = document.getElementById('orderForm');
-            const formData = new FormData(form);
             
-            // Add payment confirmation and timestamp
-            formData.append('payment_status', 'paid');
-            formData.append('customer_name', name);
-            formData.append('timestamp', new Date().getTime());
-
-            console.log('Submitting paid order...');
-            sendFormData(formData, null);
-        }
-
-        function handleSubmit(event) {
-            event.preventDefault();
-            
-            // Validate required fields
-            const form = event.target;
-            const requiredFields = form.querySelectorAll('[required]');
-            let isValid = true;
-            
-            requiredFields.forEach(field => {
-                if (!field.value.trim()) {
-                    isValid = false;
-                    field.style.borderColor = 'red';
-                } else {
-                    field.style.borderColor = '';
-                }
-            });
-            
-            if (!isValid) {
+            if (!form.checkValidity()) {
                 alert('Please fill in all required fields');
                 return;
             }
-            
-            // If using free order
+
+            // Add payment info to hidden fields
+            let paymentField = document.getElementById('payment-status');
+            if (!paymentField) {
+                paymentField = document.createElement('input');
+                paymentField.type = 'hidden';
+                paymentField.name = 'payment_status';
+                paymentField.id = 'payment-status';
+                form.appendChild(paymentField);
+            }
+            paymentField.value = 'paid';
+
+            let nameField = document.getElementById('customer-name');
+            if (!nameField) {
+                nameField = document.createElement('input');
+                nameField.type = 'hidden';
+                nameField.name = 'customer_name';
+                nameField.id = 'customer-name';
+                form.appendChild(nameField);
+            }
+            nameField.value = name;
+
+            // Submit the form
+            form.submit();
+        }
+
+        // Update the form HTML to include proper Formspree attributes
+        document.getElementById('orderForm').setAttribute('action', 'https://formspree.io/f/mjkkblaz');
+        document.getElementById('orderForm').setAttribute('method', 'POST');
+        document.getElementById('orderForm').setAttribute('enctype', 'multipart/form-data');
+
+        // Update PayPal button configuration
+        paypal.Buttons({
+            createOrder: function(data, actions) {
+                if (!document.getElementById('orderForm').checkValidity()) {
+                    alert('Please fill in all required fields');
+                    return;
+                }
+
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: currentPrice.toFixed(2)
+                        },
+                        description: 'Design Project'
+                    }]
+                });
+            },
+            onApprove: function(data, actions) {
+                return actions.order.capture()
+                    .then(function(details) {
+                        const name = details.payer.name?.given_name || 'Customer';
+                        submitOrder(name);
+                    })
+                    .catch(function(error) {
+                        console.error('PayPal Error:', error);
+                        alert('There was an error processing your payment. Please try again or email bennyf12581@gmail.com');
+                    });
+            }
+        }).render('#paypal-button-container');
+
+        // Make sure the form has the correct event handler
+        document.getElementById('orderForm').onsubmit = function(event) {
+            event.preventDefault();
             if (currentPrice === 0) {
                 submitFreeOrder();
             }
-            // Otherwise, the PayPal button handles paid orders
-        }
+        };
     </script>
 
     <script>
@@ -1232,6 +1165,16 @@
                 case 'premium':
                     currentPrice = 24; // $40 with 40% off
                     break;
+            }
+            
+            // Update all price displays
+            const totalPriceSpan = document.getElementById('total-price');
+            const originalPriceSpan = document.getElementById('original-price');
+            if (totalPriceSpan) {
+                totalPriceSpan.textContent = currentPrice.toFixed(2);
+            }
+            if (originalPriceSpan) {
+                originalPriceSpan.textContent = '$' + currentPrice.toFixed(2);
             }
             
             // Enable next button if form is complete
@@ -1387,3 +1330,4 @@
     </script>
 </body>
 </html>
+
