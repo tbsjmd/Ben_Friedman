@@ -753,6 +753,73 @@
                 font-size: 20px;
             }
         }
+
+        @keyframes float-around {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(20px, -20px) rotate(90deg); }
+            50% { transform: translate(0, -40px) rotate(180deg); }
+            75% { transform: translate(-20px, -20px) rotate(270deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
+        }
+
+        @keyframes rainbow-bg {
+            0% { background: #ff0000; }
+            17% { background: #ff8800; }
+            33% { background: #ffff00; }
+            50% { background: #00ff00; }
+            67% { background: #0000ff; }
+            83% { background: #8800ff; }
+            100% { background: #ff0000; }
+        }
+
+        .konami-mode * {
+            animation: float-around 3s infinite ease-in-out;
+        }
+
+        .konami-mode {
+            animation: rainbow-bg 10s infinite;
+        }
+
+        .konami-mode .slides img {
+            animation: float-around 4s infinite ease-in-out reverse;
+        }
+
+        .bass-boost-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .bass-boost-image {
+            max-width: 90%;
+            max-height: 90vh;
+            animation: pulse 0.1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .bass-boost-close {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 10000;
+        }
     </style>
 </head>
 <body>
@@ -1014,6 +1081,11 @@
         </div>
     </div>
 
+    <div class="bass-boost-overlay" id="bassBoostOverlay">
+        <button class="bass-boost-close" onclick="deactivateBassBoost()">🔇 Stop</button>
+        <img src="./images/61472084198__707F42D8-D3CE-4028-BB25-B72ABC1215E7.JPG" class="bass-boost-image" alt="Bass Boost">
+    </div>
+
     <script>
         let slideIndex = 0;
         showSlides();
@@ -1066,16 +1138,26 @@
 
         let currentPrice = 0; // Initialize to 0 instead of 60
 
+        // Add a flag to track if a promo code has been used
+        let promoCodeUsed = false;
+
         function applyPromoCode() {
             const promoInput = document.getElementById('promo-code');
             const originalPrice = document.getElementById('original-price');
             const newPrice = document.getElementById('new-price');
             
+            // Check if a promo code has already been used
+            if (promoCodeUsed) {
+                alert('Nice try! 😉 Only one promo code can be used per order.');
+                promoInput.value = '';
+                return;
+            }
+            
             // Get the promo code and convert to uppercase
             const code = promoInput.value.toUpperCase();
             
             if (code === 'TEST') {
-                // Update current price
+                promoCodeUsed = true;
                 currentPrice = 0;
                 
                 // Show success animation
@@ -1088,6 +1170,7 @@
                 newPrice.offsetHeight; // Trigger reflow
                 newPrice.style.animation = 'priceChange 0.5s ease-in-out';
             } else if (code === 'FREE') {
+                promoCodeUsed = true;
                 // Rick Roll time!
                 const overlay = document.getElementById('rickrollOverlay');
                 overlay.style.display = 'block';
@@ -1117,6 +1200,20 @@
                     video.remove();
                     promoInput.value = '';
                 }, 5000);
+            } else if (code === 'SECRET') {
+                promoCodeUsed = true;
+                const overlay = document.getElementById('snakeGameOverlay');
+                overlay.style.display = 'flex';
+                initSnakeGame();
+                promoInput.value = '';
+                
+                // Add keyboard controls
+                document.addEventListener('keydown', (e) => {
+                    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                        e.preventDefault();
+                        changeDirection(e.key);
+                    }
+                });
             } else {
                 alert('Invalid promo code');
                 promoInput.value = '';
@@ -1541,27 +1638,61 @@
             }
         }
 
-        // Update the applyPromoCode function to include the new SECRET code
-        function applyPromoCode() {
-            const promoInput = document.getElementById('promo-code');
-            const code = promoInput.value.toUpperCase();
-            
-            if (code === 'SECRET') {
-                const overlay = document.getElementById('snakeGameOverlay');
-                overlay.style.display = 'flex';
-                initSnakeGame();
-                promoInput.value = '';
+        // Add a function to reset promo code usage (for when placing another order)
+        function resetPromoCode() {
+            promoCodeUsed = false;
+        }
+
+        // Add this to your window.location.reload() calls or wherever you reset the form
+        window.location.reload = function() {
+            resetPromoCode();
+            // ... other reset logic ...
+        };
+    </script>
+
+    <script>
+        // Konami code sequence
+        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        let konamiIndex = 0;
+        let bassBoostAudio = null;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key.toLowerCase() === konamiCode[konamiIndex].toLowerCase()) {
+                konamiIndex++;
                 
-                // Add keyboard controls
-                document.addEventListener('keydown', (e) => {
-                    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
-                        e.preventDefault();
-                        changeDirection(e.key);
-                    }
-                });
+                if (konamiIndex === konamiCode.length) {
+                    activateBassBoost();
+                    konamiIndex = 0;
+                }
             } else {
-                // ... existing promo code logic ...
+                konamiIndex = 0;
             }
+        });
+
+        function activateBassBoost() {
+            const overlay = document.getElementById('bassBoostOverlay');
+            overlay.style.display = 'flex';
+            
+            // Create and play bass-boosted audio
+            bassBoostAudio = new Audio('https://www.myinstants.com/media/sounds/bass-boost.mp3'); // Replace with your bass-boosted audio URL
+            bassBoostAudio.loop = true;
+            bassBoostAudio.volume = 0.7; // Adjust volume as needed
+            bassBoostAudio.play();
+            
+            // Add shake effect to body
+            document.body.style.animation = 'shake 0.1s infinite';
+        }
+
+        function deactivateBassBoost() {
+            const overlay = document.getElementById('bassBoostOverlay');
+            overlay.style.display = 'none';
+            
+            if (bassBoostAudio) {
+                bassBoostAudio.pause();
+                bassBoostAudio = null;
+            }
+            
+            document.body.style.animation = '';
         }
     </script>
 </body>
