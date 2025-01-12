@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ben Friedman - Graphic Designer</title>
     <link rel="stylesheet" href="benstyles.css">
-    <script src="https://www.paypal.com/sdk/js?client-id=AfltB4uw8yBwhk-hQ6eIARUrlfFAzqMYC9a54Q53MGiTQ-vXLUJTfO1se8w6zmFkzJo5tFN7D3qKOG2x&currency=USD"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=AfltB4uw8yBwhk-hQ6eIARUrlfFAzqMYC9a54Q53MGiTQ-vXLUJTfO1se8w6zmFkzJo5tFN7D3qKOG2x&currency=USD&disable-funding=credit,card"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         /* Updated header and nav styles */
@@ -13,46 +13,6 @@
             position: relative;
             width: 100%;
             z-index: 1000;
-        }
-
-        /* Holiday Banner - moved above other styles */
-        .holiday-banner {
-            background: linear-gradient(45deg, #ff0000, #006400);
-            color: white;
-            padding: 20px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            animation: sparkle 2s infinite;
-            margin-top: 0;
-        }
-
-        /* Snow Animation */
-        .snowflake {
-            color: #fff;
-            font-size: 1em;
-            font-family: Arial, sans-serif;
-            text-shadow: 0 0 5px #000;
-            position: fixed;
-            top: -10%;
-            z-index: 9999;
-            user-select: none;
-            cursor: default;
-            animation-name: snowflakes-fall, snowflakes-shake;
-            animation-duration: 10s, 3s;
-            animation-timing-function: linear, ease-in-out;
-            animation-iteration-count: infinite, infinite;
-            animation-play-state: running, running;
-        }
-
-        @keyframes snowflakes-fall {
-            0% { top: -10%; }
-            100% { top: 100%; }
-        }
-
-        @keyframes snowflakes-shake {
-            0%, 100% { transform: translateX(0); }
-            50% { transform: translateX(80px); }
         }
 
         /* Order Form Styling */
@@ -416,6 +376,8 @@
         .tier-option .price {
             font-size: 1.5em;
             margin-bottom: 15px;
+            color: #4CAF50;
+            font-weight: bold;
         }
 
         .tier-option .original-price {
@@ -823,11 +785,6 @@
     </style>
 </head>
 <body>
-    <div class="holiday-banner">
-        <div class="sale-text">🎄 HOLIDAY SALE! 40% OFF! 🎄</div>
-        <div style="font-size: 1.2em; margin-top: 10px;">Limited Time Offer! Order Now! 🎅</div>
-    </div>
-
     <header>
         <nav>
             <ul>
@@ -837,19 +794,6 @@
             </ul>
         </nav>
     </header>
-
-    <div class="snowflakes" aria-hidden="true">
-        <div class="snowflake">❅</div>
-        <div class="snowflake">❆</div>
-        <div class="snowflake">❅</div>
-        <div class="snowflake">❆</div>
-        <div class="snowflake">❅</div>
-        <div class="snowflake">❆</div>
-        <div class="snowflake">❅</div>
-        <div class="snowflake">❆</div>
-        <div class="snowflake">❅</div>
-        <div class="snowflake">❆</div>
-    </div>
 
     <main>
         <section id="home">
@@ -923,10 +867,7 @@
                                 <div class="tier-container">
                                     <div class="tier-option" onclick="selectTier('basic')">
                                         <h3>Basic</h3>
-                                        <div class="price">
-                                            <span class="original-price">$10</span>
-                                            <span class="sale-price">$6</span>
-                                        </div>
+                                        <div class="price">$10</div>
                                         <p>Quick & Simple Designs</p>
                                         <ul>
                                             <li>Single design</li>
@@ -938,10 +879,7 @@
                                     <div class="tier-option popular" onclick="selectTier('standard')">
                                         <div class="popular-badge">POPULAR</div>
                                         <h3>Standard</h3>
-                                        <div class="price">
-                                            <span class="original-price">$20</span>
-                                            <span class="sale-price">$12</span>
-                                        </div>
+                                        <div class="price">$20</div>
                                         <p>Professional Logos & Designs</p>
                                         <ul>
                                             <li>2-3 design concepts</li>
@@ -952,10 +890,7 @@
 
                                     <div class="tier-option" onclick="selectTier('premium')">
                                         <h3>Premium</h3>
-                                        <div class="price">
-                                            <span class="original-price">$40</span>
-                                            <span class="sale-price">$24</span>
-                                        </div>
+                                        <div class="price">$40</div>
                                         <p>Large Projects (4-10 Designs)</p>
                                         <ul>
                                             <li>4-10 unique designs</li>
@@ -1371,19 +1306,30 @@
 
         // Update PayPal button configuration
         paypal.Buttons({
+            style: {
+                layout: 'vertical',
+                color:  'blue',
+                shape:  'rect',
+                label:  'paypal'
+            },
             createOrder: function(data, actions) {
+                // Validate form first
                 if (!document.getElementById('orderForm').checkValidity()) {
                     alert('Please fill in all required fields');
-                    return;
+                    return Promise.reject('Form validation failed');
                 }
 
-                // Ensure currentPrice is a number and has 2 decimal places
-                const price = parseFloat(currentPrice).toFixed(2);
+                // Get current price and ensure it's a valid number
+                const price = parseFloat(currentPrice);
+                if (isNaN(price) || price <= 0) {
+                    alert('Invalid price. Please select a package.');
+                    return Promise.reject('Invalid price');
+                }
 
                 return actions.order.create({
                     purchase_units: [{
                         amount: {
-                            value: price,
+                            value: price.toFixed(2),
                             currency_code: 'USD'
                         },
                         description: 'Design Project'
@@ -1397,13 +1343,16 @@
                         submitOrder(name);
                     })
                     .catch(function(error) {
-                        console.error('PayPal Error:', error);
+                        console.error('PayPal Capture Error:', error);
                         alert('There was an error processing your payment. Please try again or email bennyf12581@gmail.com');
                     });
             },
             onError: function(err) {
                 console.error('PayPal Error:', err);
                 alert('There was an error with PayPal. Please try again or email bennyf12581@gmail.com');
+            },
+            onCancel: function(data) {
+                console.log('Payment cancelled');
             }
         }).render('#paypal-button-container');
 
@@ -1478,16 +1427,16 @@
             // Update hidden input
             document.getElementById('selected-tier').value = tier;
             
-            // Update current price based on selection
+            // Update current price based on selection (remove holiday discount)
             switch(tier) {
                 case 'basic':
-                    currentPrice = 6; // $10 with 40% off
+                    currentPrice = 10;
                     break;
                 case 'standard':
-                    currentPrice = 12; // $20 with 40% off
+                    currentPrice = 20;
                     break;
                 case 'premium':
-                    currentPrice = 24; // $40 with 40% off
+                    currentPrice = 40;
                     break;
             }
             
