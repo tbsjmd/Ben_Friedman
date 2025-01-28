@@ -349,11 +349,20 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
+        .tier-option.selected {
+            border-color: #4CAF50;
+            background: #f0fff0;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+
         .tier-option.popular {
             border-color: #4CAF50;
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.2);
-            animation: pulseGlow 2s infinite;
+        }
+
+        .tier-option.popular.selected {
+            background: #f0fff0;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
         }
 
         .popular-badge {
@@ -410,11 +419,6 @@
             color: #4CAF50;
             position: absolute;
             left: 0;
-        }
-
-        .tier-option.selected {
-            border-color: #4CAF50;
-            background: #f8fff8;
         }
 
         .file-upload-container {
@@ -782,6 +786,18 @@
             cursor: pointer;
             z-index: 10000;
         }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -867,12 +883,13 @@
                                 <div class="tier-container">
                                     <div class="tier-option" onclick="selectTier('basic')">
                                         <h3>Basic</h3>
-                                        <div class="price">$10</div>
+                                        <div class="price">$15</div>
                                         <p>Quick & Simple Designs</p>
                                         <ul>
                                             <li>Single design</li>
-                                            <li>Basic modifications</li>
+                                            <li>3-5 revisions</li>
                                             <li>24-hour delivery</li>
+                                            <li>Created on Procreate and/or Photoshop</li>
                                         </ul>
                                     </div>
 
@@ -882,20 +899,22 @@
                                         <div class="price">$20</div>
                                         <p>Professional Logos & Designs</p>
                                         <ul>
-                                            <li>2-3 design concepts</li>
-                                            <li>Unlimited revisions</li>
+                                            <li>Single design</li>
+                                            <li>5-10 revisions</li>
                                             <li>3-day delivery</li>
+                                            <li>Created on Procreate and/or Photoshop</li>
                                         </ul>
                                     </div>
 
                                     <div class="tier-option" onclick="selectTier('premium')">
                                         <h3>Premium</h3>
-                                        <div class="price">$40</div>
-                                        <p>Large Projects (4-10 Designs)</p>
+                                        <div class="price">$30</div>
+                                        <p>Premium Quality Designs</p>
                                         <ul>
-                                            <li>4-10 unique designs</li>
-                                            <li>Priority support</li>
+                                            <li>Single design</li>
+                                            <li>Unlimited revisions</li>
                                             <li>5-day delivery</li>
+                                            <li>Created on Procreate, Photoshop, and/or Illustrator</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -921,6 +940,13 @@
                                 </div>
                             </div>
 
+                            <div class="form-group" style="margin-top: 20px;">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="policy-agreement" required>
+                                    I have read and agree to the policies below
+                                </label>
+                            </div>
+
                             <div style="text-align: center; margin-top: 20px;">
                                 <button id="nextButton" class="next-button disabled" type="button" onclick="showPaymentStep()">
                                     Next →
@@ -943,13 +969,13 @@
                             <summary style="cursor: pointer; margin-bottom: 10px;">View Policies</summary>
                             
                             <div class="policy-section">
-                                <h4>Shipping Policy</h4>
-                                <p>Please allow for 7 days to fulfil your order and an additional 3-5 shipping days on priority shipping. For any digital products, they should be delivered to your attached email. If you don't receive any documents within the next 7 days, check your junk mail. If you still haven't received anything then contact me at bennyf12581@gmail.com. This is a general baseline, not an official shipping deadline.</p>
+                                <h4>Delivery Policy</h4>
+                                <p>While I strive for 24-hour delivery on Basic packages, there may be circumstances where this isn't possible. In such cases, I will notify you as soon as possible, and you will have the option for a full refund if I haven't started the work. Once work begins, all sales are final as per my standard policy.</p>
                             </div>
 
                             <div class="policy-section">
-                                <h4>Lost in the Mail</h4>
-                                <p>Please note that I am not responsible for any packages that get lost at shipping or stolen packages. However, if something goes wrong during the shipping process, please contact me at bennyf12581@gmail.com and I will do my best to help.</p>
+                                <h4>Digital Delivery</h4>
+                                <p>All designs will be delivered to your attached email. If you don't receive any documents within the specified delivery timeframe, please check your junk mail. If you still haven't received anything then contact me at bennyf12581@gmail.com.</p>
                             </div>
 
                             <div class="policy-section">
@@ -957,24 +983,13 @@
                                 <p><strong>My policy: ALL SALES ARE FINAL!</strong><br>
                                 For those who don't understand what that means... I do NOT offer refunds!</p>
                                 
-                                <h5>Damages and Issues</h5>
-                                <p>Please thoroughly inspect your order upon reception and contact me IMMEDIATELY if the item is defective, damaged or if you receive the wrong item so that I can evaluate the issue.<br>
-                                (Please note that you might receive an item that is purposely ripped, teared, worn out and/or other distressing methods)</p>
+                                <h5>Exceptions</h5>
+                                <p>Refunds are only available if I haven't started working on your design. Once work begins, all sales are final.</p>
                                 
-                                <h5>Exchange</h5>
-                                <ul>
-                                    <li>I don't offer exchanges because all items sold are limited. If you have need to exchange for a different size, contact me personally at bennyf12581@gmail.com and I will review your request.</li>
-                                    <li>Refunds are only given to damaged products, I am not responsible for any packages lost in the mall.</li>
-                                </ul>
-                                <p>You can always contact me for any return questions at bennyf12581@gmail.com.</p>
+                                <p>You can always contact me with any questions at bennyf12581@gmail.com.</p>
                                 
-                                <h5>Exceptions / Non-returnable Items</h5>
-                                <p>PLEASE NOTE: I do not accept ANY refunds on digital products. If you made a mistake while purchasing contact me at bennyf12581@gmail.com and I will do my best to help.<br>
-                                Unfortunately, I cannot accept returns on sale items or gift cards.</p>
-                                
-                                <h5>Accepted Refunds</h5>
-                                <p>If your refund request is accepted, I will notify you once I've received and inspected your return, and let you know if the refund was approved or not. If approved, you'll be automatically refunded on your original payment method within 10 business days. Please remember it can take some time for your bank or credit card company to process and post the refund too.<br><br>
-                                If more than 15 business days have passed since I've approved your return, please contact me at bennyf12581@gmail.com.</p>
+                                <h5>Non-returnable Items</h5>
+                                <p>PLEASE NOTE: I do not accept ANY refunds on digital products once work has begun. If you made a mistake while purchasing contact me at bennyf12581@gmail.com and I will do my best to help.</p>
                             </div>
                         </details>
                     </div>
@@ -1057,6 +1072,11 @@
         });
 
         function checkFormCompletion() {
+            const nextButton = document.getElementById('nextButton');
+            const form = document.getElementById('orderForm');
+            const requiredInputs = form.querySelectorAll('input[required], select[required], textarea[required]');
+            const policyCheckbox = document.getElementById('policy-agreement');
+            
             let allFilled = true;
             requiredInputs.forEach(input => {
                 if (!input.value.trim()) {
@@ -1064,7 +1084,7 @@
                 }
             });
 
-            if (allFilled) {
+            if (allFilled && policyCheckbox.checked) {
                 nextButton.classList.remove('disabled');
             } else {
                 nextButton.classList.add('disabled');
@@ -1081,86 +1101,71 @@
             const originalPrice = document.getElementById('original-price');
             const newPrice = document.getElementById('new-price');
             
-            // Check if a promo code has already been used
             if (promoCodeUsed) {
                 alert('Nice try! 😉 Only one promo code can be used per order.');
                 promoInput.value = '';
                 return;
             }
             
-            // Get the promo code and convert to uppercase
+            // Hash the input and compare with hashed values
             const code = promoInput.value.toUpperCase();
+            const hashedCode = btoa(code); // Simple encoding
             
-            if (code === 'TEST') {
+            // Store hashed versions of codes
+            const validCodes = {
+                'VEVTVA==': 'free',         // TEST encoded
+                'RE9DTU9NUw==': 'docmoms',  // DOCMOMS encoded
+                'RlJFRQ==': 'rickroll',     // FREE encoded
+                'U0VDUkVU': 'snake'         // SECRET encoded
+            };
+            
+            const discount = validCodes[hashedCode];
+            
+            if (discount) {
                 promoCodeUsed = true;
-                currentPrice = 0;
                 
-                // Show success animation
+                switch(discount) {
+                    case 'free':
+                        currentPrice = 0;
+                        break;
+                    case 'docmoms':
+                        currentPrice = (currentPrice * 0.6).toFixed(2);
+                        break;
+                    case 'rickroll':
+                        activateRickroll();
+                        promoCodeUsed = false;
+                        promoInput.value = '';
+                        return;
+                    case 'snake':
+                        document.getElementById('snakeGameOverlay').style.display = 'flex';
+                        initSnakeGame();
+                        promoCodeUsed = false;
+                        promoInput.value = '';
+                        return;
+                }
+                
                 originalPrice.classList.add('strikethrough');
-                newPrice.textContent = '$0';
+                newPrice.textContent = '$' + currentPrice;
                 newPrice.style.display = 'inline-block';
                 
-                // Reset animation
                 newPrice.style.animation = 'none';
-                newPrice.offsetHeight; // Trigger reflow
+                newPrice.offsetHeight;
                 newPrice.style.animation = 'priceChange 0.5s ease-in-out';
-            } else if (code === 'FREE') {
-                promoCodeUsed = true;
-                // Rick Roll time!
-                const overlay = document.getElementById('rickrollOverlay');
-                overlay.style.display = 'block';
-                
-                // Create floating skulls
-                for (let i = 0; i < 20; i++) {
-                    const skull = document.createElement('div');
-                    skull.className = 'floating-skull';
-                    skull.textContent = '💀';
-                    skull.style.left = Math.random() * 100 + 'vw';
-                    skull.style.top = Math.random() * 100 + 'vh';
-                    skull.style.animationDelay = Math.random() * 2 + 's';
-                    overlay.appendChild(skull);
-                }
-
-                // Play Rick Roll
-                const video = document.createElement('iframe');
-                video.width = '0';
-                video.height = '0';
-                video.src = 'https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?autoplay=1';
-                video.allow = 'autoplay';
-                document.body.appendChild(video);
-
-                // Remove overlay after 5 seconds
-                setTimeout(() => {
-                    overlay.style.display = 'none';
-                    video.remove();
-                    promoInput.value = '';
-                }, 5000);
-            } else if (code === 'SECRET') {
-                promoCodeUsed = true;
-                const overlay = document.getElementById('snakeGameOverlay');
-                overlay.style.display = 'flex';
-                initSnakeGame();
-                promoInput.value = '';
-                
-                // Add keyboard controls
-                document.addEventListener('keydown', (e) => {
-                    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
-                        e.preventDefault();
-                        changeDirection(e.key);
-                    }
-                });
             } else {
                 alert('Invalid promo code');
                 promoInput.value = '';
-                currentPrice = parseFloat(originalPrice.textContent.replace('$', '')); // Reset to original price
-                
-                // Reset price display
-                originalPrice.classList.remove('strikethrough');
-                newPrice.style.display = 'none';
             }
         }
 
         function showPaymentStep() {
+            // Add validation check at the start of the function
+            if (!document.getElementById('selected-tier').value || 
+                !document.getElementById('policy-agreement').checked ||
+                !document.getElementById('orderForm').checkValidity()) {
+                alert('Please complete all required fields, select a package, and accept the policies before proceeding.');
+                return;
+            }
+
             const formStep1 = document.getElementById('form-step-1');
             const paymentStep = document.getElementById('payment-step');
             const totalPriceSpan = document.getElementById('total-price');
@@ -1430,13 +1435,13 @@
             // Update current price based on selection (remove holiday discount)
             switch(tier) {
                 case 'basic':
-                    currentPrice = 10;
+                    currentPrice = 15;
                     break;
                 case 'standard':
                     currentPrice = 20;
                     break;
                 case 'premium':
-                    currentPrice = 40;
+                    currentPrice = 30;
                     break;
             }
             
@@ -1572,6 +1577,7 @@
             const nextButton = document.getElementById('nextButton');
             const form = document.getElementById('orderForm');
             const requiredInputs = form.querySelectorAll('input[required], select[required], textarea[required]');
+            const policyCheckbox = document.getElementById('policy-agreement');
             
             let allFilled = true;
             requiredInputs.forEach(input => {
@@ -1580,7 +1586,7 @@
                 }
             });
 
-            if (allFilled) {
+            if (allFilled && policyCheckbox.checked) {
                 nextButton.classList.remove('disabled');
             } else {
                 nextButton.classList.add('disabled');
@@ -1643,6 +1649,17 @@
             
             document.body.style.animation = '';
         }
+    </script>
+
+    <script>
+        // Add this event listener to prevent scrolling during snake game
+        document.addEventListener('keydown', function(e) {
+            if (document.getElementById('snakeGameOverlay').style.display === 'flex' &&
+                ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                e.preventDefault();
+                changeDirection(e.key);
+            }
+        });
     </script>
 </body>
 </html>
