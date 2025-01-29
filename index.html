@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ben Friedman - Graphic Designer</title>
     <link rel="stylesheet" href="benstyles.css">
+    <link rel="icon" type="image/png" href="./images/tab.png">
     <script src="https://www.paypal.com/sdk/js?client-id=AfltB4uw8yBwhk-hQ6eIARUrlfFAzqMYC9a54Q53MGiTQ-vXLUJTfO1se8w6zmFkzJo5tFN7D3qKOG2x&currency=USD&disable-funding=credit,card"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
@@ -790,13 +791,73 @@
         .checkbox-container {
             display: flex;
             align-items: center;
-            gap: 10px;
+            position: relative;
+            padding-left: 35px;
             cursor: pointer;
+            user-select: none;
         }
 
-        .checkbox-container input[type="checkbox"] {
-            width: auto;
-            margin-right: 10px;
+        .checkbox-container input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        .checkmark {
+            position: absolute;
+            left: 0;
+            height: 25px;
+            width: 25px;
+            background-color: #fff;
+            border: 2px solid #4CAF50;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-container:hover input ~ .checkmark {
+            background-color: #f0fff0;
+            transform: scale(1.05);
+        }
+
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+            left: 9px;
+            top: 5px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .checkbox-container input:checked ~ .checkmark {
+            background-color: #4CAF50;
+            animation: pulse 0.5s ease-in-out;
+        }
+
+        .checkbox-container input:checked ~ .checkmark:after {
+            display: block;
+            animation: check 0.5s ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes check {
+            0% { transform: rotate(45deg) scale(0); }
+            100% { transform: rotate(45deg) scale(1); }
+        }
+
+        .checkbox-text {
+            margin-left: 10px;
+            color: #333;
         }
     </style>
 </head>
@@ -943,7 +1004,8 @@
                             <div class="form-group" style="margin-top: 20px;">
                                 <label class="checkbox-container">
                                     <input type="checkbox" id="policy-agreement" required>
-                                    I have read and agree to the policies below
+                                    <span class="checkmark"></span>
+                                    <span class="checkbox-text">I have read and agree to the policies below</span>
                                 </label>
                             </div>
 
@@ -1076,19 +1138,47 @@
             const form = document.getElementById('orderForm');
             const requiredInputs = form.querySelectorAll('input[required], select[required], textarea[required]');
             const policyCheckbox = document.getElementById('policy-agreement');
+            const selectedTier = document.getElementById('selected-tier');
             
             let allFilled = true;
+            let missingItems = [];
+            
+            // Check all required inputs
             requiredInputs.forEach(input => {
                 if (!input.value.trim()) {
                     allFilled = false;
+                    const labelText = input.previousElementSibling?.textContent || 'Required field';
+                    missingItems.push(labelText);
                 }
             });
 
-            if (allFilled && policyCheckbox.checked) {
+            // Debug logs to help identify the issue
+            console.log('Selected Tier:', selectedTier.value);
+            console.log('Policy Checkbox:', policyCheckbox.checked);
+
+            // Check if a tier is selected
+            if (!selectedTier.value) {
+                allFilled = false;
+                missingItems.push('Package selection');
+            }
+
+            // Check if checkbox is checked
+            if (!policyCheckbox.checked) {
+                allFilled = false;
+                missingItems.push('Policy agreement');
+            }
+
+            // Enable/disable next button
+            if (allFilled) {
                 nextButton.classList.remove('disabled');
             } else {
                 nextButton.classList.add('disabled');
             }
+
+            return {
+                isValid: allFilled,
+                missingItems: missingItems
+            };
         }
 
         let currentPrice = 0; // Initialize to 0 instead of 60
@@ -1158,11 +1248,10 @@
         }
 
         function showPaymentStep() {
-            // Add validation check at the start of the function
-            if (!document.getElementById('selected-tier').value || 
-                !document.getElementById('policy-agreement').checked ||
-                !document.getElementById('orderForm').checkValidity()) {
-                alert('Please complete all required fields, select a package, and accept the policies before proceeding.');
+            const validationResult = checkFormCompletion();
+            
+            if (!validationResult.isValid) {
+                alert('Please complete the following:\n- ' + validationResult.missingItems.join('\n- '));
                 return;
             }
 
@@ -1181,7 +1270,6 @@
                 // Show appropriate payment option based on price
                 if (currentPrice === 0) {
                     document.getElementById('paypal-button-container').style.display = 'none';
-                    // Add free order button if it doesn't exist
                     let freeOrderBtn = paymentStep.querySelector('.free-order-btn');
                     if (!freeOrderBtn) {
                         freeOrderBtn = document.createElement('button');
@@ -1429,10 +1517,12 @@
             })`);
             selectedTier.classList.add('selected');
             
-            // Update hidden input
-            document.getElementById('selected-tier').value = tier;
+            // Update hidden input and ensure it triggers change event
+            const hiddenInput = document.getElementById('selected-tier');
+            hiddenInput.value = tier;
+            hiddenInput.dispatchEvent(new Event('change')); // Trigger change event
             
-            // Update current price based on selection (remove holiday discount)
+            // Update current price based on selection
             switch(tier) {
                 case 'basic':
                     currentPrice = 15;
@@ -1445,17 +1535,13 @@
                     break;
             }
             
-            // Update all price displays
+            // Update price displays
             const totalPriceSpan = document.getElementById('total-price');
             const originalPriceSpan = document.getElementById('original-price');
-            if (totalPriceSpan) {
-                totalPriceSpan.textContent = currentPrice.toFixed(2);
-            }
-            if (originalPriceSpan) {
-                originalPriceSpan.textContent = '$' + currentPrice.toFixed(2);
-            }
+            if (totalPriceSpan) totalPriceSpan.textContent = currentPrice.toFixed(2);
+            if (originalPriceSpan) originalPriceSpan.textContent = '$' + currentPrice.toFixed(2);
             
-            // Enable next button if form is complete
+            // Check form completion
             checkFormCompletion();
         }
     </script>
@@ -1571,26 +1657,6 @@
             const nextButton = document.getElementById('nextButton');
             nextButton.classList.remove('disabled');
             nextButton.onclick = showPaymentStep; // Re-attach the click handler
-        }
-
-        function checkFormCompletion() {
-            const nextButton = document.getElementById('nextButton');
-            const form = document.getElementById('orderForm');
-            const requiredInputs = form.querySelectorAll('input[required], select[required], textarea[required]');
-            const policyCheckbox = document.getElementById('policy-agreement');
-            
-            let allFilled = true;
-            requiredInputs.forEach(input => {
-                if (!input.value.trim()) {
-                    allFilled = false;
-                }
-            });
-
-            if (allFilled && policyCheckbox.checked) {
-                nextButton.classList.remove('disabled');
-            } else {
-                nextButton.classList.add('disabled');
-            }
         }
 
         // Add a function to reset promo code usage (for when placing another order)
