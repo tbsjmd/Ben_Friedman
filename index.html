@@ -6,7 +6,7 @@
     <title>Ben Friedman - Graphic Designer</title>
     <link rel="stylesheet" href="benstyles.css">
     <link rel="icon" type="image/png" href="./images/tab.png">
-    <script src="https://www.paypal.com/sdk/js?client-id=AfltB4uw8yBwhk-hQ6eIARUrlfFAzqMYC9a54Q53MGiTQ-vXLUJTfO1se8w6zmFkzJo5tFN7D3qKOG2x&currency=USD&disable-funding=credit,card"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=AfltB4uw8yBwhk-hQ6eIARUrlfFAzqMYC9a54Q53MGiTQ-vXLUJTfO1se8w6zmFkzJo5tFN7D3qKOG2x&currency=USD&components=buttons,funding-eligibility"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         /* Updated header and nav styles */
@@ -844,17 +844,6 @@
             animation: check 0.5s ease-in-out;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        @keyframes check {
-            0% { transform: rotate(45deg) scale(0); }
-            100% { transform: rotate(45deg) scale(1); }
-        }
-
         .checkbox-text {
             margin-left: 10px;
             color: #333;
@@ -1186,6 +1175,25 @@
         // Add a flag to track if a promo code has been used
         let promoCodeUsed = false;
 
+        // Add this function to handle cookies
+        function setCookie(name, value, days) {
+            const expires = new Date();
+            expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = name + '=' + value + ';expires=' + expires.toUTCString() + ';path=/';
+        }
+
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for(let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        // Update the promo code function
         function applyPromoCode() {
             const promoInput = document.getElementById('promo-code');
             const originalPrice = document.getElementById('original-price');
@@ -1203,7 +1211,7 @@
             
             // Store hashed versions of codes
             const validCodes = {
-                'VEVTVA==': 'free',         // TEST encoded
+                'VEVTVA==': 'test',         // TEST encoded
                 'RE9DTU9NUw==': 'docmoms',  // DOCMOMS encoded
                 'RlJFRQ==': 'rickroll',     // FREE encoded
                 'U0VDUkVU': 'snake'         // SECRET encoded
@@ -1212,25 +1220,41 @@
             const discount = validCodes[hashedCode];
             
             if (discount) {
+                // Check if code has been used before (except for 'test')
+                if (discount !== 'test') {
+                    const usedCode = getCookie('used_' + discount);
+                    if (usedCode) {
+                        alert('This promo code has already been used!');
+                        promoInput.value = '';
+                        return;
+                    }
+                }
+                
                 promoCodeUsed = true;
                 
                 switch(discount) {
-                    case 'free':
+                    case 'test':
                         currentPrice = 0;
                         break;
                     case 'docmoms':
                         currentPrice = (currentPrice * 0.6).toFixed(2);
+                        // Set cookie to mark code as used
+                        setCookie('used_docmoms', 'true', 365); // Cookie expires in 1 year
                         break;
                     case 'rickroll':
                         activateRickroll();
                         promoCodeUsed = false;
                         promoInput.value = '';
+                        // Set cookie to mark code as used
+                        setCookie('used_rickroll', 'true', 365);
                         return;
                     case 'snake':
                         document.getElementById('snakeGameOverlay').style.display = 'flex';
                         initSnakeGame();
                         promoCodeUsed = false;
                         promoInput.value = '';
+                        // Set cookie to mark code as used
+                        setCookie('used_snake', 'true', 365);
                         return;
                 }
                 
@@ -1245,6 +1269,15 @@
                 alert('Invalid promo code');
                 promoInput.value = '';
             }
+        }
+
+        // Add a function to reset promo code usage (for testing)
+        function resetPromoCodes() {
+            const codes = ['docmoms', 'rickroll', 'snake'];
+            codes.forEach(code => {
+                document.cookie = 'used_' + code + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
+            });
+            alert('All promo codes have been reset!');
         }
 
         function showPaymentStep() {
