@@ -851,7 +851,7 @@
             <div class="order-container">
                 <div class="order-form">
                     <h2>🎨 Order Graphic Designs 🎨</h2>
-                    <form id="orderForm" action="https://formspree.io/f/mjkkblaz" method="POST" enctype="multipart/form-data">
+                    <form id="orderForm" action="https://formspree.io/f/xanoyoek" method="POST" enctype="multipart/form-data">
                         <div id="form-step-1">
                             <div class="form-group">
                                 <label for="name">Your Name</label>
@@ -1247,7 +1247,7 @@
 
             const formData = new FormData(form);
 
-            fetch('https://formspree.io/f/mjkkblaz', {
+            fetch('https://formspree.io/f/xanoyoek', {
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -1282,7 +1282,7 @@
             formData.append('customer_name', name);
             formData.append('final_price', parseFloat(currentPrice).toFixed(2));
 
-            fetch('https://formspree.io/f/mjkkblaz', {
+            fetch('https://formspree.io/f/xanoyoek', {
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -1301,7 +1301,7 @@
         }
 
         // Update the form HTML to include proper Formspree attributes
-        document.getElementById('orderForm').setAttribute('action', 'https://formspree.io/f/mjkkblaz');
+        document.getElementById('orderForm').setAttribute('action', 'https://formspree.io/f/xanoyoek');
         document.getElementById('orderForm').setAttribute('method', 'POST');
         document.getElementById('orderForm').setAttribute('enctype', 'multipart/form-data');
 
