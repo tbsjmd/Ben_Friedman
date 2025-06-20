@@ -1237,7 +1237,7 @@
                         currentPrice = 0;
                         break;
                     case 'docmoms':
-                        currentPrice = (currentPrice * 0.6).toFixed(2);
+                        currentPrice = currentPrice * 0.60;
                         // Set cookie to mark code as used
                         setCookie('used_docmoms', 'true', 365); // Cookie expires in 1 year
                         break;
@@ -1259,7 +1259,7 @@
                 }
                 
                 originalPrice.classList.add('strikethrough');
-                newPrice.textContent = '$' + currentPrice;
+                newPrice.textContent = '$' + currentPrice.toFixed(2);
                 newPrice.style.display = 'inline-block';
                 
                 newPrice.style.animation = 'none';
@@ -1439,9 +1439,6 @@
                         amount: {
                             currency_code: "USD",
                             value: parseFloat(currentPrice).toFixed(2)
-                        },
-                        payee: {
-                            email_address: "bennyf12581@gmail.com"
                         },
                         description: "Graphic Design Services"
                     }],
@@ -1675,10 +1672,10 @@
                 const originalPrice = document.getElementById('original-price');
                 const newPrice = document.getElementById('new-price');
                 const discountMultiplier = (100 - currentDiscount) / 100;
-                currentPrice = (currentPrice * discountMultiplier).toFixed(2);
+                currentPrice = currentPrice * discountMultiplier;
                 
                 originalPrice.classList.add('strikethrough');
-                newPrice.textContent = '$' + currentPrice;
+                newPrice.textContent = '$' + currentPrice.toFixed(2);
                 newPrice.style.display = 'inline-block';
             }
 
