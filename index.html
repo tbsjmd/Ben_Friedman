@@ -1394,7 +1394,7 @@
             });
         }
 
-        function submitOrder(name) {
+        function submitOrder(details) {
             const form = document.getElementById('orderForm');
             
             if (!form.checkValidity()) {
@@ -1404,7 +1404,8 @@
 
             const formData = new FormData(form);
             formData.append('payment_status', 'paid');
-            formData.append('customer_name', name);
+            formData.append('customer_name', details.payer.name.given_name + ' ' + details.payer.name.surname);
+            formData.append('transaction_id', details.id);
             formData.append('final_price', parseFloat(currentPrice).toFixed(2));
 
             fetch('https://formspree.io/f/mjkkblaz', {
@@ -1447,18 +1448,7 @@
             },
             onApprove: function(data, actions) {
                 return actions.order.capture().then(function(details) {
-                    // Show success message
-                    document.getElementById('successMessage').style.display = 'block';
-                    
-                    // Add transaction ID to form
-                    const transactionInput = document.createElement('input');
-                    transactionInput.type = 'hidden';
-                    transactionInput.name = 'transaction_id';
-                    transactionInput.value = details.id;
-                    document.getElementById('orderForm').appendChild(transactionInput);
-                    
-                    // Send form data to your email
-                    document.getElementById('orderForm').submit();
+                    submitOrder(details);
                 }).catch(function(err) {
                     console.error('Capture error:', err);
                     alert('There was an error processing your payment. Please contact bennyf12581@gmail.com');
@@ -1764,4 +1754,3 @@
     </script>
 </body>
 </html>
-
