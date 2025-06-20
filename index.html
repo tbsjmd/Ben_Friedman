@@ -1437,13 +1437,17 @@
                 return actions.order.create({
                     purchase_units: [{
                         amount: {
-                            value: currentPrice.toString()
+                            currency_code: "USD",
+                            value: parseFloat(currentPrice).toFixed(2)
                         },
                         payee: {
-                            email_address: "bennyf12581@gmail.com" // Add your PayPal business email
+                            email_address: "bennyf12581@gmail.com"
                         },
-                        description: "Graphic Design Services" // Add a description
-                    }]
+                        description: "Graphic Design Services"
+                    }],
+                    application_context: {
+                        shipping_preference: 'NO_SHIPPING'
+                    }
                 });
             },
             onApprove: function(data, actions) {
