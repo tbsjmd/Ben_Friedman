@@ -1,0 +1,1870 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Ben Friedman - Graphic Designer</title>
+     <link rel="stylesheet" href="benstyles.css">
+     <link rel="icon" type="image/png" href="./images/tab.png">
+     <script
+          src="https://www.paypal.com/sdk/js?client-id=AbOFXEEEcpwktyVawZQk9rv-gl41mDqA0UwpjmWGBb1uf8kA5Et-44EW9yfYc3yFrTBcdxhHqBBEbCIN&currency=USD&components=buttons,funding-eligibility"></script>
+     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+     <style>
+          /* Updated header and nav styles */
+          header {
+               position: relative;
+               width: 100%;
+               z-index: 1000;
+          }
+
+          /* Order Form Styling */
+          .order-container {
+               max-width: 600px;
+               margin: 20px auto;
+               padding: 2rem;
+               background: rgba(255, 255, 255, 0.9);
+               border-radius: 10px;
+               box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+          }
+
+          .order-form h2 {
+               color: #006400;
+               text-align: center;
+               margin-bottom: 1.5rem;
+          }
+
+          /* Rest of your styles remain the same */
+          .sale-text {
+               font-size: 2.5em;
+               font-weight: bold;
+               text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+          }
+
+          .original-price {
+               text-decoration: line-through;
+               color: #ffcccc;
+               font-size: 1.8em;
+          }
+
+          .sale-price {
+               color: #ffff00;
+               font-size: 2.2em;
+               font-weight: bold;
+               margin-left: 10px;
+               animation: pulse 1.5s infinite;
+          }
+
+          @keyframes pulse {
+               0% {
+                    transform: scale(1);
+               }
+
+               50% {
+                    transform: scale(1.1);
+               }
+
+               100% {
+                    transform: scale(1);
+               }
+          }
+
+          @keyframes sparkle {
+               0% {
+                    background-position: 0% 50%;
+               }
+
+               100% {
+                    background-position: 100% 50%;
+               }
+          }
+
+          .slideshow-container {
+               position: relative;
+               max-width: 600px;
+               margin: auto;
+               padding: 20px;
+               height: 450px;
+          }
+
+          .slides {
+               position: absolute;
+               width: 100%;
+               height: 100%;
+               background: white;
+               box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+               border-radius: 8px;
+               opacity: 0;
+               visibility: hidden;
+               transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+          }
+
+          .slides img {
+               width: 100%;
+               height: 100%;
+               border-radius: 8px;
+               object-fit: contain;
+               background: white;
+          }
+
+          .slides.active {
+               opacity: 1;
+               visibility: visible;
+          }
+
+          .slides .watermark {
+               position: absolute;
+               top: 50%;
+               left: 50%;
+               transform: translate(-50%, -50%);
+               color: white;
+               font-size: 20px;
+               font-weight: bold;
+               text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+               opacity: 0.4;
+          }
+
+          #featured-work {
+               text-align: center;
+               padding: 2rem;
+          }
+
+          #featured-work h2 {
+               margin-bottom: 1rem;
+          }
+
+          .dots-container {
+               text-align: center;
+               padding: 15px;
+          }
+
+          .dot {
+               height: 15px;
+               width: 15px;
+               margin: 0 5px;
+               background-color: #bbb;
+               border-radius: 50%;
+               display: inline-block;
+               cursor: pointer;
+          }
+
+          .active {
+               background-color: #717171;
+          }
+
+          #contact {
+               padding: 4rem 2rem;
+               background: #f8f9fa;
+          }
+
+          .contact-container {
+               max-width: 600px;
+               margin: 0 auto;
+          }
+
+          .form-group {
+               margin-bottom: 1.5rem;
+          }
+
+          label {
+               display: block;
+               margin-bottom: 0.5rem;
+               font-weight: bold;
+          }
+
+          input,
+          textarea {
+               width: 100%;
+               padding: 0.8rem;
+               border: 1px solid #ddd;
+               border-radius: 4px;
+               font-size: 1rem;
+          }
+
+          textarea {
+               min-height: 150px;
+               resize: vertical;
+          }
+
+          button {
+               background: #333;
+               color: white;
+               padding: 1rem 2rem;
+               border: none;
+               border-radius: 4px;
+               font-size: 1rem;
+               cursor: pointer;
+               transition: background 0.3s ease;
+          }
+
+          button:hover {
+               background: #555;
+          }
+
+          .contact-info {
+               margin-top: 2rem;
+               text-align: center;
+          }
+
+          .next-button {
+               background: #333;
+               color: white;
+               padding: 1rem 2rem;
+               border: none;
+               border-radius: 4px;
+               font-size: 1rem;
+               cursor: pointer;
+               transition: all 0.3s ease;
+          }
+
+          .next-button.disabled {
+               opacity: 0.5;
+               cursor: not-allowed;
+               background: #999;
+          }
+
+          #payment-step {
+               transition: opacity 0.5s ease;
+          }
+
+          /* Add this to your existing styles */
+          #message {
+               transition: opacity 0.5s ease-in-out;
+          }
+
+          /* Update the style to only affect placeholder */
+          #message::placeholder {
+               transition: opacity 0.5s ease-in-out;
+          }
+
+          /* Add this to your existing styles */
+          @keyframes fadeInOut {
+               0% {
+                    opacity: 1;
+               }
+
+               50% {
+                    opacity: 0;
+               }
+
+               100% {
+                    opacity: 1;
+               }
+          }
+
+          #message::placeholder {
+               animation: fadeInOut 1s ease-in-out;
+          }
+
+          /* Add these styles to your existing styles */
+          .policy-section {
+               margin-bottom: 25px;
+               padding-bottom: 15px;
+               border-bottom: 1px solid #eee;
+          }
+
+          .policy-section:last-child {
+               border-bottom: none;
+          }
+
+          .policy-section h4 {
+               color: #006400;
+               margin-bottom: 15px;
+          }
+
+          .policy-section h5 {
+               color: #333;
+               margin: 15px 0 10px 0;
+          }
+
+          .policy-section p {
+               margin-bottom: 10px;
+               line-height: 1.6;
+          }
+
+          .policy-section ul {
+               margin: 10px 0;
+               padding-left: 20px;
+          }
+
+          .policy-section ul li {
+               margin-bottom: 5px;
+          }
+
+          /* Add these styles */
+          @keyframes priceChange {
+               0% {
+                    transform: scale(1);
+               }
+
+               50% {
+                    transform: scale(1.2);
+               }
+
+               100% {
+                    transform: scale(1);
+               }
+          }
+
+          #new-price {
+               color: #4CAF50;
+               font-weight: bold;
+               animation: priceChange 0.5s ease-in-out;
+          }
+
+          #original-price.strikethrough {
+               text-decoration: line-through;
+               color: #999;
+               font-size: 18px;
+          }
+
+          /* Add these animations to your styles */
+          @keyframes pulseGlow {
+               0% {
+                    transform: scale(1);
+                    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4);
+               }
+
+               50% {
+                    transform: scale(1.05);
+                    box-shadow: 0 0 20px 10px rgba(76, 175, 80, 0.2);
+               }
+
+               100% {
+                    transform: scale(1);
+                    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4);
+               }
+          }
+
+          .free-order-btn {
+               background: #4CAF50;
+               color: white;
+               padding: 20px 40px;
+               border: none;
+               border-radius: 8px;
+               font-size: 18px;
+               cursor: pointer;
+               margin: 30px auto;
+               display: block;
+               transition: all 0.3s ease;
+               animation: pulseGlow 2s infinite;
+          }
+
+          .free-order-btn:hover {
+               transform: scale(1.1);
+               background: #45a049;
+          }
+
+          /* Add to your existing styles section */
+          .pricing-tiers {
+               margin: 2rem 0;
+          }
+
+          .tier-container {
+               display: flex;
+               gap: 20px;
+               justify-content: center;
+               flex-wrap: wrap;
+          }
+
+          .tier-option {
+               flex: 1;
+               min-width: 250px;
+               padding: 20px;
+               border: 2px solid #ddd;
+               border-radius: 10px;
+               text-align: center;
+               cursor: pointer;
+               transition: all 0.3s ease;
+               position: relative;
+          }
+
+          .tier-option:hover {
+               transform: translateY(-5px);
+               box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+          }
+
+          .tier-option.selected {
+               border-color: #4CAF50;
+               background: #f0fff0;
+               transform: translateY(-5px);
+               box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+          }
+
+          .tier-option.popular {
+               border-color: #4CAF50;
+          }
+
+          .tier-option.popular.selected {
+               background: #f0fff0;
+               box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+          }
+
+          .popular-badge {
+               position: absolute;
+               top: -12px;
+               right: -12px;
+               background: #4CAF50;
+               color: white;
+               padding: 5px 10px;
+               border-radius: 20px;
+               font-size: 0.8em;
+               font-weight: bold;
+          }
+
+          .tier-option h3 {
+               color: #333;
+               margin-bottom: 15px;
+          }
+
+          .tier-option .price {
+               font-size: 1.5em;
+               margin-bottom: 15px;
+               color: #4CAF50;
+               font-weight: bold;
+          }
+
+          .tier-option .original-price {
+               text-decoration: line-through;
+               color: #999;
+               font-size: 0.8em;
+               margin-right: 10px;
+          }
+
+          .tier-option .sale-price {
+               color: #4CAF50;
+               font-weight: bold;
+          }
+
+          .tier-option ul {
+               list-style: none;
+               padding: 0;
+               margin: 15px 0;
+               text-align: left;
+          }
+
+          .tier-option ul li {
+               margin: 10px 0;
+               padding-left: 20px;
+               position: relative;
+          }
+
+          .tier-option ul li:before {
+               content: "✓";
+               color: #4CAF50;
+               position: absolute;
+               left: 0;
+          }
+
+          .file-upload-container {
+               margin-top: 10px;
+          }
+
+          .upload-btn {
+               background: #f0f0f0;
+               border: 2px dashed #ccc;
+               padding: 15px 25px;
+               border-radius: 8px;
+               cursor: pointer;
+               transition: all 0.3s ease;
+               width: 100%;
+               margin-bottom: 10px;
+               color: #000000;
+          }
+
+          .upload-btn:hover {
+               background: #e8e8e8;
+               border-color: #999;
+          }
+
+          .file-list {
+               display: flex;
+               flex-wrap: wrap;
+               gap: 10px;
+               margin-top: 10px;
+          }
+
+          .file-preview {
+               position: relative;
+               width: 100px;
+               height: 100px;
+               border-radius: 8px;
+               overflow: hidden;
+               border: 2px solid #ddd;
+          }
+
+          .file-preview img {
+               width: 100%;
+               height: 100%;
+               object-fit: cover;
+          }
+
+          .remove-file {
+               position: absolute;
+               top: 5px;
+               right: 5px;
+               background: rgba(255, 255, 255, 0.9);
+               border: none;
+               border-radius: 50%;
+               width: 20px;
+               height: 20px;
+               font-size: 12px;
+               cursor: pointer;
+               display: flex;
+               align-items: center;
+               justify-content: center;
+               color: #ff4444;
+          }
+
+          .remove-file:hover {
+               background: #ff4444;
+               color: white;
+          }
+
+          .drawing-container {
+               margin-top: 15px;
+               border: 2px solid #ddd;
+               border-radius: 8px;
+               padding: 15px;
+               background: #fff;
+          }
+
+          .color-palette {
+               margin-bottom: 10px;
+               display: flex;
+               gap: 10px;
+               align-items: center;
+          }
+
+          .color-btn {
+               width: 30px;
+               height: 30px;
+               border: 2px solid #ddd;
+               border-radius: 50%;
+               cursor: pointer;
+               transition: transform 0.2s;
+               flex-shrink: 0;
+          }
+
+          .color-btn:hover,
+          .eraser-btn:hover {
+               transform: scale(1.1);
+          }
+
+          .color-btn.active {
+               border-color: #333;
+               transform: scale(1.1);
+          }
+
+          .eraser-btn {
+               padding: 5px 10px;
+               border: 2px solid #ddd;
+               border-radius: 20px;
+               cursor: pointer;
+               background: white;
+          }
+
+          .clear-btn {
+               padding: 5px 15px;
+               border: 2px solid #ddd;
+               border-radius: 20px;
+               cursor: pointer;
+               background: white;
+               margin-left: auto;
+               color: #000000;
+          }
+
+          #drawing-canvas {
+               width: 100%;
+               height: 400px;
+               border: 1px solid #ddd;
+               border-radius: 4px;
+               cursor: crosshair;
+               background: white;
+          }
+
+          .save-drawing-btn {
+               margin-top: 10px;
+               padding: 10px 20px;
+               background: #4CAF50;
+               color: white;
+               border: none;
+               border-radius: 4px;
+               cursor: pointer;
+               transition: background 0.3s;
+          }
+
+          .save-drawing-btn:hover {
+               background: #45a049;
+          }
+
+          .success-message {
+               display: none;
+               position: fixed;
+               top: 50%;
+               left: 50%;
+               transform: translate(-50%, -50%);
+               background: white;
+               padding: 40px;
+               border-radius: 15px;
+               box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
+               text-align: center;
+               z-index: 1000;
+               animation: popIn 0.5s ease-out;
+          }
+
+          .success-message h2 {
+               color: #4CAF50;
+               margin-bottom: 20px;
+          }
+
+          .success-message p {
+               margin-bottom: 30px;
+               color: #666;
+          }
+
+          .success-message button {
+               background: #4CAF50;
+               color: white;
+               border: none;
+               padding: 10px 20px;
+               border-radius: 5px;
+               cursor: pointer;
+               transition: background 0.3s;
+          }
+
+          .success-message button:hover {
+               background: #45a049;
+          }
+
+          @keyframes popIn {
+               0% {
+                    transform: translate(-50%, -50%) scale(0.5);
+                    opacity: 0;
+               }
+
+               100% {
+                    transform: translate(-50%, -50%) scale(1);
+                    opacity: 1;
+               }
+          }
+
+          .rickroll-overlay {
+               display: none;
+               position: fixed;
+               top: 0;
+               left: 0;
+               width: 100%;
+               height: 100%;
+               background: rgba(0, 0, 0, 0.95);
+               z-index: 9999;
+               overflow: hidden;
+          }
+
+          .rickroll-content {
+               position: absolute;
+               top: 50%;
+               left: 50%;
+               transform: translate(-50%, -50%);
+               text-align: center;
+               color: white;
+               font-size: 3em;
+               text-shadow: 0 0 10px #ff0000;
+               animation: pulse 2s infinite;
+          }
+
+          .floating-skull {
+               position: absolute;
+               font-size: 40px;
+               animation: float 3s infinite;
+               opacity: 0.7;
+          }
+
+          @keyframes pulse {
+               0% {
+                    transform: translate(-50%, -50%) scale(1);
+               }
+
+               50% {
+                    transform: translate(-50%, -50%) scale(1.1);
+               }
+
+               100% {
+                    transform: translate(-50%, -50%) scale(1);
+               }
+          }
+
+          @keyframes float {
+               0% {
+                    transform: translateY(0) rotate(0deg);
+               }
+
+               50% {
+                    transform: translateY(-20px) rotate(180deg);
+               }
+
+               100% {
+                    transform: translateY(0) rotate(360deg);
+               }
+          }
+
+          .snake-game-overlay {
+               display: none;
+               position: fixed;
+               top: 0;
+               left: 0;
+               width: 100%;
+               height: 100%;
+               background: rgba(0, 0, 0, 0.9);
+               z-index: 9999;
+               justify-content: center;
+               align-items: center;
+          }
+
+          .snake-game-container {
+               background: white;
+               padding: 20px;
+               border-radius: 10px;
+               text-align: center;
+          }
+
+          .game-header {
+               margin-bottom: 10px;
+               display: flex;
+               justify-content: space-between;
+               font-size: 18px;
+               padding: 0 10px;
+          }
+
+          #snakeCanvas {
+               border: 2px solid #333;
+               border-radius: 5px;
+          }
+
+          .game-controls button {
+               margin: 10px;
+               padding: 8px 20px;
+               background: #4CAF50;
+               color: white;
+               border: none;
+               border-radius: 5px;
+               cursor: pointer;
+          }
+
+          .game-controls button:hover {
+               background: #45a049;
+          }
+
+          .mobile-controls {
+               display: none;
+          }
+
+          @media (max-width: 768px) {
+               .mobile-controls {
+                    display: block;
+                    margin-top: 15px;
+               }
+
+               .mobile-controls button {
+                    width: 50px;
+                    height: 50px;
+                    margin: 5px;
+                    font-size: 20px;
+               }
+          }
+
+          @keyframes float-around {
+               0% {
+                    transform: translate(0, 0) rotate(0deg);
+               }
+
+               25% {
+                    transform: translate(20px, -20px) rotate(90deg);
+               }
+
+               50% {
+                    transform: translate(0, -40px) rotate(180deg);
+               }
+
+               75% {
+                    transform: translate(-20px, -20px) rotate(270deg);
+               }
+
+               100% {
+                    transform: translate(0, 0) rotate(360deg);
+               }
+          }
+
+          @keyframes rainbow-bg {
+               0% {
+                    background: #ff0000;
+               }
+
+               17% {
+                    background: #ff8800;
+               }
+
+               33% {
+                    background: #ffff00;
+               }
+
+               50% {
+                    background: #00ff00;
+               }
+
+               67% {
+                    background: #0000ff;
+               }
+
+               83% {
+                    background: #8800ff;
+               }
+
+               100% {
+                    background: #ff0000;
+               }
+          }
+
+          .konami-mode * {
+               animation: float-around 3s infinite ease-in-out;
+          }
+
+          .konami-mode {
+               animation: rainbow-bg 10s infinite;
+          }
+
+          .konami-mode .slides img {
+               animation: float-around 4s infinite ease-in-out reverse;
+          }
+
+          .bass-boost-overlay {
+               display: none;
+               position: fixed;
+               top: 0;
+               left: 0;
+               width: 100%;
+               height: 100%;
+               background: rgba(0, 0, 0, 0.95);
+               z-index: 9999;
+               justify-content: center;
+               align-items: center;
+          }
+
+          .bass-boost-image {
+               max-width: 90%;
+               max-height: 90vh;
+               animation: pulse 0.1s infinite;
+          }
+
+          @keyframes pulse {
+               0% {
+                    transform: scale(1);
+               }
+
+               50% {
+                    transform: scale(1.02);
+               }
+
+               100% {
+                    transform: scale(1);
+               }
+          }
+
+          .bass-boost-close {
+               position: fixed;
+               top: 20px;
+               right: 20px;
+               background: white;
+               border: none;
+               padding: 10px 20px;
+               border-radius: 5px;
+               cursor: pointer;
+               z-index: 10000;
+          }
+
+          .checkbox-container {
+               display: flex;
+               align-items: center;
+               position: relative;
+               padding-left: 35px;
+               cursor: pointer;
+               user-select: none;
+          }
+
+          .checkbox-container input {
+               position: absolute;
+               opacity: 0;
+               cursor: pointer;
+               height: 0;
+               width: 0;
+          }
+
+          .checkmark {
+               position: absolute;
+               left: 0;
+               height: 25px;
+               width: 25px;
+               background-color: #fff;
+               border: 2px solid #4CAF50;
+               border-radius: 5px;
+               transition: all 0.3s ease;
+          }
+
+          .checkbox-container:hover input~.checkmark {
+               background-color: #f0fff0;
+               transform: scale(1.05);
+          }
+
+          .checkmark:after {
+               content: "";
+               position: absolute;
+               display: none;
+               left: 9px;
+               top: 5px;
+               width: 5px;
+               height: 10px;
+               border: solid white;
+               border-width: 0 2px 2px 0;
+               transform: rotate(45deg);
+          }
+
+          .checkbox-container input:checked~.checkmark {
+               background-color: #4CAF50;
+               animation: pulse 0.5s ease-in-out;
+          }
+
+          .checkbox-container input:checked~.checkmark:after {
+               display: block;
+               animation: check 0.5s ease-in-out;
+          }
+
+          .checkbox-text {
+               margin-left: 10px;
+               color: #333;
+          }
+     </style>
+</head>
+
+<body>
+     <header>
+          <nav>
+               <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="portfolio.html">Portfolio</a></li>
+                    <li><a href="#order">Order Now</a></li>
+               </ul>
+          </nav>
+     </header>
+
+     <main>
+          <section id="home">
+               <h1>Ben Friedman</h1>
+               <h2>Graphic Designer</h2>
+               <p>Creating compelling visual designs that tell your story</p>
+          </section>
+
+          <section id="featured-work">
+               <h2>Featured Work</h2>
+               <div class="slideshow-container">
+                    <div class="slides">
+                         <img src="./images/IMG_0514.JPG" alt="Design Project">
+                         <div class="watermark">Ben Friedman</div>
+                    </div>
+
+                    <div class="slides">
+                         <img src="./images/IMG_0534.JPG" alt="Design Project">
+                         <div class="watermark">Ben Friedman</div>
+                    </div>
+
+                    <div class="slides">
+                         <img src="./images/IMG_0535.JPG" alt="Design Project">
+                         <div class="watermark">Ben Friedman</div>
+                    </div>
+
+                    <div class="slides">
+                         <img src="./images/IMG_0538.JPG" alt="Design Project">
+                         <div class="watermark">Ben Friedman</div>
+                    </div>
+
+                    <div class="slides">
+                         <img src="./images/IMG_0540.JPG" alt="Design Project">
+                         <div class="watermark">Ben Friedman</div>
+                    </div>
+
+                    <div class="slides">
+                         <img src="./images/IMG_0543.JPG" alt="Design Project">
+                         <div class="watermark">Ben Friedman</div>
+                    </div>
+
+                    <div class="dots-container">
+                         <span class="dot"></span>
+                         <span class="dot"></span>
+                         <span class="dot"></span>
+                         <span class="dot"></span>
+                         <span class="dot"></span>
+                         <span class="dot"></span>
+                    </div>
+               </div>
+          </section>
+
+          <section id="order">
+               <div class="order-container">
+                    <div class="order-form">
+                         <h2>🎨 Order Graphic Designs 🎨</h2>
+                         <form id="orderForm" action="https://formspree.io/f/mjkkblaz" method="POST"
+                              enctype="multipart/form-data">
+                              <div id="form-step-1">
+                                   <div class="form-group">
+                                        <label for="name">Your Name</label>
+                                        <input type="text" id="name" name="name" required>
+                                   </div>
+
+                                   <div class="form-group">
+                                        <label for="email">Your Email</label>
+                                        <input type="email" id="email" name="email" required>
+                                   </div>
+
+                                   <div class="form-group pricing-tiers">
+                                        <label>Select Your Package</label>
+                                        <div class="tier-container">
+                                             <div class="tier-option" onclick="selectTier('basic')">
+                                                  <h3>Basic</h3>
+                                                  <div class="price">$15</div>
+                                                  <p>Quick & Simple Designs</p>
+                                                  <ul>
+                                                       <li>Single design</li>
+                                                       <li>3-5 revisions</li>
+                                                       <li>24-hour delivery</li>
+                                                       <li>Created on Procreate and/or Photoshop</li>
+                                                  </ul>
+                                             </div>
+
+                                             <div class="tier-option popular" onclick="selectTier('standard')">
+                                                  <div class="popular-badge">POPULAR</div>
+                                                  <h3>Standard</h3>
+                                                  <div class="price">$20</div>
+                                                  <p>Professional Logos & Designs</p>
+                                                  <ul>
+                                                       <li>Single design</li>
+                                                       <li>5-10 revisions</li>
+                                                       <li>3-day delivery</li>
+                                                       <li>Created on Procreate and/or Photoshop</li>
+                                                  </ul>
+                                             </div>
+
+                                             <div class="tier-option" onclick="selectTier('premium')">
+                                                  <h3>Premium</h3>
+                                                  <div class="price">$30</div>
+                                                  <p>Premium Quality Designs</p>
+                                                  <ul>
+                                                       <li>Single design</li>
+                                                       <li>Unlimited revisions</li>
+                                                       <li>5-day delivery</li>
+                                                       <li>Created on Procreate, Photoshop, and/or Illustrator</li>
+                                                  </ul>
+                                             </div>
+                                        </div>
+                                        <input type="hidden" id="selected-tier" name="selected-tier" required>
+                                   </div>
+
+                                   <div class="form-group">
+                                        <label for="message">Project Details</label>
+                                        <textarea id="message" name="message" required></textarea>
+                                   </div>
+
+                                   <div id="promo-section" style="margin: 20px 0; text-align: center;">
+                                        <div class="form-group">
+                                             <label for="promo-code">Have a Promo Code?</label>
+                                             <div style="display: flex; justify-content: center; gap: 10px;">
+                                                  <input type="text" id="promo-code" placeholder="Enter code"
+                                                       style="width: 150px;">
+                                                  <button type="button" onclick="applyPromoCode()"
+                                                       style="width: auto;">Apply</button>
+                                             </div>
+                                        </div>
+                                        <div id="price-display" style="margin-top: 15px; font-size: 24px;">
+                                             <span id="original-price">$0</span>
+                                             <span id="new-price" style="display: none;"></span>
+                                        </div>
+                                   </div>
+
+                                   <div class="form-group" style="margin-top: 20px;">
+                                        <label class="checkbox-container">
+                                             <input type="checkbox" id="policy-agreement" required>
+                                             <span class="checkmark"></span>
+                                             <span class="checkbox-text">I have read and agree to the policies
+                                                  below</span>
+                                        </label>
+                                   </div>
+
+                                   <div style="text-align: center; margin-top: 20px;">
+                                        <button id="nextButton" class="next-button disabled" type="button"
+                                             onclick="showPaymentStep()">
+                                             Next →
+                                        </button>
+                                   </div>
+                              </div>
+
+                              <div id="payment-step" style="display: none; opacity: 0;">
+                                   <h3 style="text-align: center; margin-bottom: 20px;">Total: $<span
+                                             id="total-price">0</span></h3>
+                                   <div id="paypal-button-container"></div>
+                              </div>
+                         </form>
+                    </div>
+
+                    <div class="contact-info" style="margin-top: 20px; text-align: center;">
+                         <p>Questions? Email me at: bennyf12581@gmail.com</p>
+
+                         <div id="policies" style="margin-top: 30px; font-size: 12px; color: #666; text-align: left;">
+                              <details>
+                                   <summary style="cursor: pointer; margin-bottom: 10px;">View Policies</summary>
+
+                                   <div class="policy-section">
+                                        <h4>Delivery Policy</h4>
+                                        <p>While I strive for 24-hour delivery on Basic packages, there may be
+                                             circumstances where this isn't possible. In such cases, I will notify you
+                                             as soon as possible, and you will have the option for a full refund if I
+                                             haven't started the work. Once work begins, all sales are final as per my
+                                             standard policy.</p>
+                                   </div>
+
+                                   <div class="policy-section">
+                                        <h4>Digital Delivery</h4>
+                                        <p>All designs will be delivered to your attached email. If you don't receive
+                                             any documents within the specified delivery timeframe, please check your
+                                             junk mail. If you still haven't received anything then contact me at
+                                             bennyf12581@gmail.com.</p>
+                                   </div>
+
+                                   <div class="policy-section">
+                                        <h4>Refund Policy</h4>
+                                        <p><strong>My policy: ALL SALES ARE FINAL!</strong><br>
+                                             For those who don't understand what that means... I do NOT offer refunds!
+                                        </p>
+
+                                        <h5>Exceptions</h5>
+                                        <p>Refunds are only available if I haven't started working on your design. Once
+                                             work begins, all sales are final.</p>
+
+                                        <p>You can always contact me with any questions at bennyf12581@gmail.com.</p>
+
+                                        <h5>Non-returnable Items</h5>
+                                        <p>PLEASE NOTE: I do not accept ANY refunds on digital products once work has
+                                             begun. If you made a mistake while purchasing contact me at
+                                             bennyf12581@gmail.com and I will do my best to help.</p>
+                                   </div>
+                              </details>
+                         </div>
+                    </div>
+               </div>
+          </section>
+     </main>
+
+     <div class="success-message" id="successMessage">
+          <h2>🎉 Thank You for Your Order! 🎉</h2>
+          <p>We'll be in touch with you soon.</p>
+          <button onclick="window.location.reload()">Place Another Order</button>
+     </div>
+
+     <div class="rickroll-overlay" id="rickrollOverlay">
+          <div class="rickroll-content">
+               bro really thought 💀
+          </div>
+     </div>
+
+     <div class="snake-game-overlay" id="snakeGameOverlay">
+          <div class="snake-game-container">
+               <div class="game-header">
+                    <span>🍎 = 1% discount (Max 50%)</span>
+                    <span>Current Discount: <span id="discountAmount">0</span>%</span>
+               </div>
+               <canvas id="snakeCanvas" width="400" height="400"></canvas>
+               <div class="game-controls">
+                    <button onclick="closeSnakeGame()">Apply Discount</button>
+                    <div class="mobile-controls">
+                         <button onclick="changeDirection('ArrowUp')">↑</button>
+                         <div>
+                              <button onclick="changeDirection('ArrowLeft')">←</button>
+                              <button onclick="changeDirection('ArrowRight')">→</button>
+                         </div>
+                         <button onclick="changeDirection('ArrowDown')">↓</button>
+                    </div>
+               </div>
+          </div>
+     </div>
+
+     <div class="bass-boost-overlay" id="bassBoostOverlay">
+          <button class="bass-boost-close" onclick="deactivateBassBoost()">🔇 Stop</button>
+          <img src="./images/61472084198__707F42D8-D3CE-4028-BB25-B72ABC1215E7.JPG" class="bass-boost-image"
+               alt="Bass Boost">
+     </div>
+
+     <script>
+          let slideIndex = 0;
+          showSlides();
+
+          function showSlides() {
+               let slides = document.getElementsByClassName("slides");
+               let dots = document.getElementsByClassName("dot");
+
+               // Remove active class from all slides and dots
+               for (let i = 0; i < slides.length; i++) {
+                    slides[i].classList.remove("active");
+                    dots[i].classList.remove("active");
+               }
+
+               slideIndex++;
+               if (slideIndex > slides.length) { slideIndex = 1 }
+
+               // Add active class to current slide and dot
+               slides[slideIndex - 1].classList.add("active");
+               dots[slideIndex - 1].classList.add("active");
+
+               setTimeout(showSlides, 3000);
+          }
+     </script>
+
+     <script>
+          const form = document.getElementById('orderForm');
+          const nextButton = document.getElementById('nextButton');
+          const requiredInputs = form.querySelectorAll('input[required], select[required], textarea[required]');
+
+          // Check form completion on input changes
+          requiredInputs.forEach(input => {
+               input.addEventListener('input', checkFormCompletion);
+          });
+
+          function checkFormCompletion() {
+               const nextButton = document.getElementById('nextButton');
+               const form = document.getElementById('orderForm');
+               const requiredInputs = form.querySelectorAll('input[required], select[required], textarea[required]');
+               const policyCheckbox = document.getElementById('policy-agreement');
+               const selectedTier = document.getElementById('selected-tier');
+
+               let allFilled = true;
+               let missingItems = [];
+
+               // Check all required inputs
+               requiredInputs.forEach(input => {
+                    if (!input.value.trim()) {
+                         allFilled = false;
+                         const labelText = input.previousElementSibling?.textContent || 'Required field';
+                         missingItems.push(labelText);
+                    }
+               });
+
+               // Debug logs to help identify the issue
+               console.log('Selected Tier:', selectedTier.value);
+               console.log('Policy Checkbox:', policyCheckbox.checked);
+
+               // Check if a tier is selected
+               if (!selectedTier.value) {
+                    allFilled = false;
+                    missingItems.push('Package selection');
+               }
+
+               // Check if checkbox is checked
+               if (!policyCheckbox.checked) {
+                    allFilled = false;
+                    missingItems.push('Policy agreement');
+               }
+
+               // Enable/disable next button
+               if (allFilled) {
+                    nextButton.classList.remove('disabled');
+               } else {
+                    nextButton.classList.add('disabled');
+               }
+
+               return {
+                    isValid: allFilled,
+                    missingItems: missingItems
+               };
+          }
+
+          let currentPrice = 0; // Initialize to 0 instead of 60
+
+          // Add a flag to track if a promo code has been used
+          let promoCodeUsed = false;
+
+          // Add this function to handle cookies
+          function setCookie(name, value, days) {
+               const expires = new Date();
+               expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+               document.cookie = name + '=' + value + ';expires=' + expires.toUTCString() + ';path=/';
+          }
+
+          function getCookie(name) {
+               const nameEQ = name + "=";
+               const ca = document.cookie.split(';');
+               for (let i = 0; i < ca.length; i++) {
+                    let c = ca[i];
+                    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+               }
+               return null;
+          }
+
+          // Update the promo code function
+          function applyPromoCode() {
+               const promoInput = document.getElementById('promo-code');
+               const originalPrice = document.getElementById('original-price');
+               const newPrice = document.getElementById('new-price');
+
+               if (promoCodeUsed) {
+                    alert('Nice try! 😉 Only one promo code can be used per order.');
+                    promoInput.value = '';
+                    return;
+               }
+
+               // Hash the input and compare with hashed values
+               const code = promoInput.value.toUpperCase();
+               const hashedCode = btoa(code); // Simple encoding
+
+               // Store hashed versions of codes
+               const validCodes = {
+                    'VEVTVA==': 'test',         // TEST encoded
+                    'RE9DTU9NUw==': 'docmoms',  // DOCMOMS encoded
+                    'RlJFRQ==': 'rickroll',     // FREE encoded
+                    'U0VDUkVU': 'snake'         // SECRET encoded
+               };
+
+               const discount = validCodes[hashedCode];
+
+               if (discount) {
+                    // Check if code has been used before (except for 'test')
+                    if (discount !== 'test') {
+                         const usedCode = getCookie('used_' + discount);
+                         if (usedCode) {
+                              alert('This promo code has already been used!');
+                              promoInput.value = '';
+                              return;
+                         }
+                    }
+
+                    promoCodeUsed = true;
+
+                    switch (discount) {
+                         case 'test':
+                              currentPrice = 0;
+                              break;
+                         case 'docmoms':
+                              currentPrice = currentPrice * 0.60;
+                              // Set cookie to mark code as used
+                              setCookie('used_docmoms', 'true', 365); // Cookie expires in 1 year
+                              break;
+                         case 'rickroll':
+                              activateRickroll();
+                              promoCodeUsed = false;
+                              promoInput.value = '';
+                              // Set cookie to mark code as used
+                              setCookie('used_rickroll', 'true', 365);
+                              return;
+                         case 'snake':
+                              document.getElementById('snakeGameOverlay').style.display = 'flex';
+                              initSnakeGame();
+                              promoCodeUsed = false;
+                              promoInput.value = '';
+                              // Set cookie to mark code as used
+                              setCookie('used_snake', 'true', 365);
+                              return;
+                    }
+
+                    originalPrice.classList.add('strikethrough');
+                    newPrice.textContent = '$' + currentPrice.toFixed(2);
+                    newPrice.style.display = 'inline-block';
+
+                    newPrice.style.animation = 'none';
+                    newPrice.offsetHeight;
+                    newPrice.style.animation = 'priceChange 0.5s ease-in-out';
+               } else {
+                    alert('Invalid promo code');
+                    promoInput.value = '';
+               }
+          }
+
+          // Add a function to reset promo code usage (for testing)
+          function resetPromoCodes() {
+               const codes = ['docmoms', 'rickroll', 'snake'];
+               codes.forEach(code => {
+                    document.cookie = 'used_' + code + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
+               });
+               alert('All promo codes have been reset!');
+          }
+
+          function showPaymentStep() {
+               const validationResult = checkFormCompletion();
+
+               if (!validationResult.isValid) {
+                    alert('Please complete the following:\n- ' + validationResult.missingItems.join('\n- '));
+                    return;
+               }
+
+               const formStep1 = document.getElementById('form-step-1');
+               const paymentStep = document.getElementById('payment-step');
+               const totalPriceSpan = document.getElementById('total-price');
+
+               // Update the total price display
+               totalPriceSpan.textContent = currentPrice;
+
+               formStep1.style.opacity = '0';
+               setTimeout(() => {
+                    formStep1.style.display = 'none';
+                    paymentStep.style.display = 'block';
+
+                    // Show appropriate payment option based on price
+                    if (currentPrice === 0) {
+                         document.getElementById('paypal-button-container').style.display = 'none';
+                         let freeOrderBtn = paymentStep.querySelector('.free-order-btn');
+                         if (!freeOrderBtn) {
+                              freeOrderBtn = document.createElement('button');
+                              freeOrderBtn.className = 'free-order-btn';
+                              freeOrderBtn.textContent = '🎉 Complete Free Order 🎉';
+                              freeOrderBtn.onclick = submitFreeOrder;
+                              paymentStep.appendChild(freeOrderBtn);
+                         }
+                         freeOrderBtn.style.display = 'block';
+                    } else {
+                         document.getElementById('paypal-button-container').style.display = 'block';
+                         const freeOrderBtn = paymentStep.querySelector('.free-order-btn');
+                         if (freeOrderBtn) {
+                              freeOrderBtn.style.display = 'none';
+                         }
+                    }
+
+                    setTimeout(() => {
+                         paymentStep.style.opacity = '1';
+                    }, 50);
+               }, 300);
+          }
+
+          function showSuccessMessage() {
+               // Trigger confetti
+               const duration = 3000;
+               const animationEnd = Date.now() + duration;
+               const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+               function randomInRange(min, max) {
+                    return Math.random() * (max - min) + min;
+               }
+
+               const interval = setInterval(function () {
+                    const timeLeft = animationEnd - Date.now();
+
+                    if (timeLeft <= 0) {
+                         return clearInterval(interval);
+                    }
+
+                    const particleCount = 50 * (timeLeft / duration);
+
+                    // Since particles fall down, start a bit higher than random
+                    confetti(Object.assign({}, defaults, {
+                         particleCount,
+                         origin: { x: randomInRange(0.1, 0.9), y: Math.random() - 0.2 }
+                    }));
+               }, 250);
+
+               // Show success message
+               document.getElementById('successMessage').style.display = 'block';
+          }
+
+          function submitFreeOrder() {
+               const form = document.getElementById('orderForm');
+
+               if (!form.checkValidity()) {
+                    alert('Please fill in all required fields');
+                    return;
+               }
+
+               const submitButton = document.querySelector('.free-order-btn');
+               if (submitButton) {
+                    submitButton.disabled = true;
+                    submitButton.textContent = 'Submitting...';
+               }
+
+               const formData = new FormData(form);
+
+               fetch('https://formspree.io/f/mjkkblaz', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                         'Accept': 'application/json'
+                    }
+               })
+                    .then(response => response.json())
+                    .then(data => {
+                         showSuccessMessage();
+                         form.style.display = 'none';
+                    })
+                    .catch(error => {
+                         console.error('Error:', error);
+                         alert('There was an error submitting your order. Please email bennyf12581@gmail.com');
+                         if (submitButton) {
+                              submitButton.disabled = false;
+                              submitButton.textContent = '🎉 Complete Free Order 🎉';
+                         }
+                    });
+          }
+
+          function submitOrder(details) {
+               const form = document.getElementById('orderForm');
+
+               if (!form.checkValidity()) {
+                    alert('Please fill in all required fields');
+                    return;
+               }
+
+               const formData = new FormData(form);
+               formData.append('payment_status', 'paid');
+               formData.append('customer_name', details.payer.name.given_name + ' ' + details.payer.name.surname);
+               formData.append('transaction_id', details.id);
+               formData.append('final_price', parseFloat(currentPrice).toFixed(2));
+
+               fetch('https://formspree.io/f/mjkkblaz', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                         'Accept': 'application/json'
+                    }
+               })
+                    .then(response => response.json())
+                    .then(data => {
+                         showSuccessMessage();
+                         form.style.display = 'none';
+                    })
+                    .catch(error => {
+                         console.error('Error:', error);
+                         alert('There was an error submitting your order. Please email bennyf12581@gmail.com');
+                    });
+          }
+
+          // Update the form HTML to include proper Formspree attributes
+          document.getElementById('orderForm').setAttribute('action', 'https://formspree.io/f/mjkkblaz');
+          document.getElementById('orderForm').setAttribute('method', 'POST');
+          document.getElementById('orderForm').setAttribute('enctype', 'multipart/form-data');
+
+          // Update PayPal button configuration
+          paypal.Buttons({
+               createOrder: function (data, actions) {
+                    return actions.order.create({
+                         purchase_units: [{
+                              amount: {
+                                   currency_code: "USD",
+                                   value: parseFloat(currentPrice).toFixed(2)
+                              },
+                              description: "Graphic Design Services"
+                         }],
+                         application_context: {
+                              shipping_preference: 'NO_SHIPPING'
+                         }
+                    });
+               },
+               onApprove: function (data, actions) {
+                    return actions.order.capture().then(function (details) {
+                         submitOrder(details);
+                    }).catch(function (err) {
+                         console.error('Capture error:', err);
+                         alert('There was an error processing your payment. Please contact bennyf12581@gmail.com');
+                    });
+               },
+               onError: function (err) {
+                    console.error('PayPal Error:', err);
+                    alert('There was an error processing your payment. Please try again or contact bennyf12581@gmail.com');
+               },
+               style: {
+                    layout: 'vertical',
+                    color: 'gold',
+                    shape: 'rect',
+                    label: 'paypal'
+               }
+          }).render('#paypal-button-container');
+
+          // Add error handling for PayPal script loading
+          window.addEventListener('error', function (e) {
+               if (e.target.src && e.target.src.indexOf('paypal') !== -1) {
+                    console.error('PayPal script failed to load:', e);
+                    alert('There was an error loading PayPal. Please refresh the page or contact bennyf12581@gmail.com');
+               }
+          }, true);
+
+          // Make sure the form has the correct event handler
+          document.getElementById('orderForm').onsubmit = function (event) {
+               event.preventDefault();
+               if (currentPrice === 0) {
+                    submitFreeOrder();
+               }
+          };
+     </script>
+
+     <script>
+          const placeholders = [
+               "Create a red and blue logo for my fishing company called 'Big Catch Co.'",
+               "Design a business card for my yoga studio with calming greens and a lotus flower.",
+               "Make a flyer for our Halloween party with spooky vibes and a haunted house theme.",
+               "Create an Instagram post announcing my online boutique's Black Friday sale.",
+               "Design a minimalist menu for my vegan cafe, featuring greens and earthy tones.",
+               // ... all 50 examples ...
+               "Design a cozy and inviting logo for my knitting supply store, 'Warm Threads'."
+          ];
+
+          const messageTextarea = document.getElementById('message');
+
+          function getRandomPlaceholder() {
+               const randomIndex = Math.floor(Math.random() * placeholders.length);
+               return placeholders[randomIndex];
+          }
+
+          function cyclePlaceholder() {
+               // Only cycle if the textarea is empty
+               if (!messageTextarea.value) {
+                    // Fade out
+                    messageTextarea.style.opacity = '0';
+
+                    // Change placeholder after fade out
+                    setTimeout(() => {
+                         messageTextarea.setAttribute('placeholder', getRandomPlaceholder());
+                         // Fade in
+                         messageTextarea.style.opacity = '1';
+                    }, 500);
+               }
+          }
+
+          // Change placeholder every 4 seconds
+          cyclePlaceholder(); // Initial placeholder
+          const cycleInterval = setInterval(cyclePlaceholder, 4000);
+
+          // Stop cycling when user starts typing
+          messageTextarea.addEventListener('input', function () {
+               if (this.value) {
+                    clearInterval(cycleInterval);
+                    this.style.opacity = '1'; // Ensure full opacity when typing
+               }
+          });
+     </script>
+
+     <script>
+          function selectTier(tier) {
+               // Remove selected class from all tiers
+               document.querySelectorAll('.tier-option').forEach(option => {
+                    option.classList.remove('selected');
+               });
+
+               // Add selected class to clicked tier
+               const selectedTier = document.querySelector(`.tier-option:nth-child(${tier === 'basic' ? '1' : tier === 'standard' ? '2' : '3'
+                    })`);
+               selectedTier.classList.add('selected');
+
+               // Update hidden input and ensure it triggers change event
+               const hiddenInput = document.getElementById('selected-tier');
+               hiddenInput.value = tier;
+               hiddenInput.dispatchEvent(new Event('change')); // Trigger change event
+
+               // Update current price based on selection
+               switch (tier) {
+                    case 'basic':
+                         currentPrice = 15;
+                         break;
+                    case 'standard':
+                         currentPrice = 20;
+                         break;
+                    case 'premium':
+                         currentPrice = 30;
+                         break;
+               }
+
+               // Update price displays
+               const totalPriceSpan = document.getElementById('total-price');
+               const originalPriceSpan = document.getElementById('original-price');
+               if (totalPriceSpan) totalPriceSpan.textContent = currentPrice.toFixed(2);
+               if (originalPriceSpan) originalPriceSpan.textContent = '$' + currentPrice.toFixed(2);
+
+               // Check form completion
+               checkFormCompletion();
+          }
+     </script>
+
+     <script>
+          let snake = [];
+          let food = { x: 0, y: 0 };
+          let direction = 'right';
+          let gameLoop = null;
+          let currentDiscount = 0;
+
+          function initSnakeGame() {
+               const canvas = document.getElementById('snakeCanvas');
+               const ctx = canvas.getContext('2d');
+               const gridSize = 20;
+               const grid = canvas.width / gridSize;
+
+               // Initialize snake
+               snake = [
+                    { x: 5, y: 5 },
+                    { x: 4, y: 5 },
+                    { x: 3, y: 5 }
+               ];
+               direction = 'right';
+               currentDiscount = 0;
+               document.getElementById('discountAmount').textContent = '0';
+
+               // Place initial food
+               placeFood();
+
+               // Game loop
+               if (gameLoop) clearInterval(gameLoop);
+               gameLoop = setInterval(() => {
+                    // Clear canvas
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    // Move snake
+                    const head = { x: snake[0].x, y: snake[0].y };
+                    switch (direction) {
+                         case 'up': head.y--; break;
+                         case 'down': head.y++; break;
+                         case 'left': head.x--; break;
+                         case 'right': head.x++; break;
+                    }
+
+                    // Check collision with walls or self
+                    if (head.x < 0 || head.x >= grid || head.y < 0 || head.y >= grid ||
+                         snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+                         clearInterval(gameLoop);
+                         alert(`Game Over! You earned ${currentDiscount}% discount!`);
+                         return;
+                    }
+
+                    // Check food collision
+                    if (head.x === food.x && head.y === food.y) {
+                         if (currentDiscount < 50) {
+                              currentDiscount++;
+                              document.getElementById('discountAmount').textContent = currentDiscount;
+                              placeFood();
+                         }
+                    } else {
+                         snake.pop();
+                    }
+
+                    snake.unshift(head);
+
+                    // Draw food
+                    ctx.fillStyle = 'red';
+                    ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize - 2, gridSize - 2);
+
+                    // Draw snake
+                    ctx.fillStyle = 'green';
+                    snake.forEach(segment => {
+                         ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize - 2, gridSize - 2);
+                    });
+               }, 100);
+          }
+
+          function placeFood() {
+               const canvas = document.getElementById('snakeCanvas');
+               const grid = canvas.width / 20;
+               do {
+                    food.x = Math.floor(Math.random() * grid);
+                    food.y = Math.floor(Math.random() * grid);
+               } while (snake.some(segment => segment.x === food.x && segment.y === food.y));
+          }
+
+          function changeDirection(newDirection) {
+               const opposites = { up: 'down', down: 'up', left: 'right', right: 'left' };
+               if (opposites[direction] !== newDirection) {
+                    direction = newDirection.replace('Arrow', '').toLowerCase();
+               }
+          }
+
+          function closeSnakeGame() {
+               const overlay = document.getElementById('snakeGameOverlay');
+               overlay.style.display = 'none';
+               if (gameLoop) clearInterval(gameLoop);
+
+               // Apply the discount
+               if (currentDiscount > 0) {
+                    const originalPrice = document.getElementById('original-price');
+                    const newPrice = document.getElementById('new-price');
+                    const discountMultiplier = (100 - currentDiscount) / 100;
+                    currentPrice = currentPrice * discountMultiplier;
+
+                    originalPrice.classList.add('strikethrough');
+                    newPrice.textContent = '$' + currentPrice.toFixed(2);
+                    newPrice.style.display = 'inline-block';
+               }
+
+               // Force enable the next button
+               const nextButton = document.getElementById('nextButton');
+               nextButton.classList.remove('disabled');
+               nextButton.onclick = showPaymentStep; // Re-attach the click handler
+          }
+
+          // Add a function to reset promo code usage (for when placing another order)
+          function resetPromoCode() {
+               promoCodeUsed = false;
+          }
+
+          // Add this to your window.location.reload() calls or wherever you reset the form
+          window.location.reload = function () {
+               resetPromoCode();
+               // ... other reset logic ...
+          };
+     </script>
+
+     <script>
+          // Konami code sequence
+          const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+          let konamiIndex = 0;
+          let bassBoostAudio = null;
+
+          document.addEventListener('keydown', (e) => {
+               if (e.key.toLowerCase() === konamiCode[konamiIndex].toLowerCase()) {
+                    konamiIndex++;
+
+                    if (konamiIndex === konamiCode.length) {
+                         activateBassBoost();
+                         konamiIndex = 0;
+                    }
+               } else {
+                    konamiIndex = 0;
+               }
+          });
+
+          function activateBassBoost() {
+               const overlay = document.getElementById('bassBoostOverlay');
+               overlay.style.display = 'flex';
+
+               // Create and play bass-boosted audio
+               bassBoostAudio = new Audio('https://www.myinstants.com/media/sounds/bass-boost.mp3'); // Replace with your bass-boosted audio URL
+               bassBoostAudio.loop = true;
+               bassBoostAudio.volume = 0.7; // Adjust volume as needed
+               bassBoostAudio.play();
+
+               // Add shake effect to body
+               document.body.style.animation = 'shake 0.1s infinite';
+          }
+
+          function deactivateBassBoost() {
+               const overlay = document.getElementById('bassBoostOverlay');
+               overlay.style.display = 'none';
+
+               if (bassBoostAudio) {
+                    bassBoostAudio.pause();
+                    bassBoostAudio = null;
+               }
+
+               document.body.style.animation = '';
+          }
+     </script>
+
+     <script>
+          // Add this event listener to prevent scrolling during snake game
+          document.addEventListener('keydown', function (e) {
+               if (document.getElementById('snakeGameOverlay').style.display === 'flex' &&
+                    ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                    e.preventDefault();
+                    changeDirection(e.key);
+               }
+          });
+     </script>
+</body>
+
+</html>
