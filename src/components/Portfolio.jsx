@@ -11,7 +11,7 @@ const images = [
 
 export default function Portfolio() {
   return (
-    <section id="work" className="relative py-32 px-6 z-10 glass mt-10 rounded-[3rem] mx-4 md:mx-10 border border-slate-300/30">
+    <section id="work" className="relative py-16 md:py-32 px-4 md:px-6 z-10 glass mt-10 rounded-3xl md:rounded-[3rem] mx-4 md:mx-10 border border-slate-300/30">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

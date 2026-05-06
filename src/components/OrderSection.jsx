@@ -180,10 +180,10 @@ export default function OrderSection() {
   };
 
   return (
-    <section id="order" className="relative py-32 px-6 z-10 mt-10">
-      <div className="max-w-4xl mx-auto glass rounded-3xl p-8 md:p-12 border border-slate-300/30">
+    <section id="order" className="relative py-16 md:py-32 px-4 md:px-6 z-10 mt-10">
+      <div className="max-w-4xl mx-auto glass rounded-2xl md:rounded-3xl p-6 md:p-12 border border-slate-300/30">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 drop-shadow-sm">Order a Design</h2>
+          <h2 className="text-3xl md:text-5xl font-bold text-slate-900 drop-shadow-sm">Order a Design</h2>
         </div>
 
         {step === 1 ? (
@@ -220,9 +220,9 @@ export default function OrderSection() {
                   <div 
                     key={tier.id}
                     onClick={() => setSelectedTier(tier.id)}
-                    className={`relative cursor-pointer rounded-2xl p-6 transition-all duration-300 border ${
+                    className={`relative cursor-pointer rounded-2xl p-5 md:p-6 transition-all duration-300 border ${
                       selectedTier === tier.id 
-                        ? 'bg-blue-50 border-blue-400 shadow-md scale-105' 
+                        ? 'bg-blue-50 border-blue-400 shadow-md scale-100 md:scale-105' 
                         : 'bg-white/50 border-slate-200 hover:border-slate-300 hover:bg-white/80'
                     }`}
                   >

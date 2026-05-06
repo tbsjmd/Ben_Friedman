@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X } from 'lucide-react';
 
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,6 +31,13 @@ export default function Navigation() {
             <img src="/images/tab.png" alt="BF Logo" className="w-10 h-10 object-contain rounded-lg shadow-sm" />
           </a>
           
+          <button 
+            className="md:hidden text-slate-800 hover:text-black transition-colors"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+
           <nav className="hidden md:block">
             <ul className="flex items-center gap-8">
               <li>
@@ -49,6 +58,26 @@ export default function Navigation() {
           </nav>
         </div>
       </div>
+
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="md:hidden absolute top-full left-0 w-full px-6 mt-2"
+          >
+            <div className="glass-dark rounded-2xl p-6 flex flex-col gap-4 shadow-xl border border-white/20">
+              <a href="#home" onClick={() => setMobileMenuOpen(false)} className="text-base font-semibold text-slate-800 hover:text-black transition-colors">Home</a>
+              <a href="#work" onClick={() => setMobileMenuOpen(false)} className="text-base font-semibold text-slate-800 hover:text-black transition-colors">Portfolio</a>
+              <a href="#contact" onClick={() => setMobileMenuOpen(false)} className="text-base font-semibold text-slate-800 hover:text-black transition-colors">Contact</a>
+              <a href="#order" onClick={() => setMobileMenuOpen(false)} className="mt-2 text-center py-3 rounded-full bg-slate-900 text-white text-sm font-bold shadow-md">
+                Order Now
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.header>
   );
 }

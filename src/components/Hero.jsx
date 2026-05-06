@@ -11,7 +11,7 @@ export default function Hero() {
     <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
       {/* Abstract Background Elements - Subtle glass bubbles */}
       <motion.div 
-        className="absolute top-0 right-0 w-[600px] h-[600px] bg-white/10 rounded-full blur-[80px] pointer-events-none opacity-40"
+        className="absolute top-0 right-0 w-[300px] h-[300px] md:w-[600px] md:h-[600px] bg-white/10 rounded-full blur-[60px] md:blur-[80px] pointer-events-none opacity-40"
         animate={{
           x: [0, 50, 0],
           y: [0, -50, 0],
@@ -20,7 +20,7 @@ export default function Hero() {
         style={{ y: y1 }}
       />
       <motion.div 
-        className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-white/5 rounded-full blur-[100px] pointer-events-none opacity-40"
+        className="absolute bottom-0 left-0 w-[250px] h-[250px] md:w-[500px] md:h-[500px] bg-white/5 rounded-full blur-[60px] md:blur-[100px] pointer-events-none opacity-40"
         animate={{
           x: [0, -50, 0],
           y: [0, 50, 0],
@@ -36,7 +36,7 @@ export default function Hero() {
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           style={{ opacity }}
         >
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-4 text-slate-900 leading-tight drop-shadow-sm">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight mb-4 text-slate-900 leading-tight drop-shadow-sm">
             Ben Friedman
           </h1>
           <p className="text-lg md:text-xl text-slate-800 mb-10 max-w-2xl mx-auto leading-relaxed font-semibold">
