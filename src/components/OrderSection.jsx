@@ -51,6 +51,15 @@ export default function OrderSection() {
   const [confirmingOrder, setConfirmingOrder] = useState(false);
   const [recaptchaToken, setRecaptchaToken] = useState(null);
   const recaptchaRef = useRef();
+
+  // Developer Panel State
+  const [showDevAuth, setShowDevAuth] = useState(false);
+  const [devAuthPassword, setDevAuthPassword] = useState('');
+  const [showDevPanel, setShowDevPanel] = useState(false);
+  const [devOrderNumber, setDevOrderNumber] = useState('');
+  const [devPrice, setDevPrice] = useState('');
+  const [devDetails, setDevDetails] = useState('');
+  const [devGeneratedLink, setDevGeneratedLink] = useState('');
   
   useEffect(() => {
     const fetchPromos = async () => {
@@ -113,6 +122,10 @@ export default function OrderSection() {
     if (lowerCode === 'test') {
       setDiscount(100);
       setPromoMessage('Test code applied! 100% off.');
+    } else if (lowerCode === 'teddyben123') {
+      setShowDevAuth(true);
+      setPromoCode('');
+      setPromoMessage('');
     } else if (lowerCode === 'docmoms') {
       setDiscount(40);
       setPromoMessage('Docmoms code applied! 40% off.');
@@ -507,6 +520,103 @@ export default function OrderSection() {
             >
               Claim Discount
             </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Dev Auth Overlay */}
+      <AnimatePresence>
+        {showDevAuth && (
+          <motion.div 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[10000] glass flex items-center justify-center flex-col text-slate-900"
+          >
+            <div className="bg-white/80 p-8 rounded-3xl shadow-2xl max-w-sm w-full border border-slate-300">
+              <h2 className="text-2xl font-bold mb-4">Developer Access</h2>
+              <input 
+                type="password" 
+                value={devAuthPassword}
+                onChange={e => setDevAuthPassword(e.target.value)}
+                placeholder="Enter Password"
+                className="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 mb-4 focus:outline-none focus:border-blue-500"
+              />
+              <div className="flex gap-3">
+                <button 
+                  onClick={() => {
+                    if (devAuthPassword === 'waiter2026') {
+                      setShowDevPanel(true);
+                      setShowDevAuth(false);
+                      setDevAuthPassword('');
+                    } else {
+                      alert('Incorrect password');
+                    }
+                  }} 
+                  className="flex-1 py-3 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800"
+                >
+                  Unlock
+                </button>
+                <button onClick={() => setShowDevAuth(false)} className="flex-1 py-3 bg-slate-200 text-slate-700 rounded-xl font-bold hover:bg-slate-300">Cancel</button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Dev Panel Overlay */}
+      <AnimatePresence>
+        {showDevPanel && (
+          <motion.div 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[10000] glass flex items-center justify-center text-slate-900 px-4 overflow-y-auto"
+          >
+            <div className="bg-white/90 p-8 rounded-3xl shadow-2xl max-w-md w-full border border-slate-300 my-8">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold text-blue-700">Custom Payment Link</h2>
+                <button onClick={() => { setShowDevPanel(false); setDevGeneratedLink(''); }} className="text-slate-400 hover:text-slate-900 text-xl font-bold">✕</button>
+              </div>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm font-semibold">Order Number</label>
+                  <input type="text" value={devOrderNumber} onChange={e => setDevOrderNumber(e.target.value)} className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2 mt-1" />
+                </div>
+                <div>
+                  <label className="text-sm font-semibold">Additional Price ($)</label>
+                  <input type="number" value={devPrice} onChange={e => setDevPrice(e.target.value)} className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2 mt-1" />
+                </div>
+                <div>
+                  <label className="text-sm font-semibold">Details / Reason</label>
+                  <textarea rows={3} value={devDetails} onChange={e => setDevDetails(e.target.value)} className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2 mt-1"></textarea>
+                </div>
+                
+                <button 
+                  onClick={() => {
+                    if (!devOrderNumber || !devPrice || !devDetails) return alert('Fill all fields');
+                    const link = `${window.location.origin}${window.location.pathname}?payment_order=${encodeURIComponent(devOrderNumber)}&price=${encodeURIComponent(devPrice)}&details=${encodeURIComponent(devDetails)}`;
+                    setDevGeneratedLink(link);
+                  }}
+                  className="w-full py-3 mt-2 bg-blue-600 text-white rounded-xl font-bold shadow-md hover:bg-blue-700"
+                >
+                  Generate Link
+                </button>
+                
+                {devGeneratedLink && (
+                  <div className="mt-6 p-4 bg-slate-100 rounded-xl border border-slate-200">
+                    <p className="text-xs font-semibold mb-2 text-slate-600">Generated Link:</p>
+                    <input type="text" readOnly value={devGeneratedLink} className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm mb-3" />
+                    <button 
+                      onClick={() => {
+                        navigator.clipboard.writeText(devGeneratedLink);
+                        alert('Copied to clipboard!');
+                      }}
+                      className="w-full py-2 bg-slate-900 text-white rounded-lg text-sm font-bold"
+                    >
+                      Copy Link
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
