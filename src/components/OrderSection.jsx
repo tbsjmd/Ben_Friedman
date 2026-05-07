@@ -316,12 +316,12 @@ export default function OrderSection() {
                     </div>
                     <div>
                       <p className="font-bold text-slate-900 mb-1">Digital Delivery</p>
-                      <p>All designs will be delivered to your attached email. If you don't receive any documents within the specified delivery timeframe, please check your junk mail. If you still haven't received anything then contact me at <a href="mailto:benfriedman30@gmail.com" className="text-blue-600 font-semibold hover:underline">benfriedman30@gmail.com</a>.</p>
+                      <p>All designs will be delivered to your attached email. If you don't receive any documents within the specified delivery timeframe, please check your junk mail. If you still haven't received anything then contact me at <a href="mailto:contact@bfgraphix.com" className="text-blue-600 font-semibold hover:underline">contact@bfgraphix.com</a>.</p>
                     </div>
                     <div>
                       <p className="font-bold text-slate-900 mb-1">Refund Policy</p>
                       <p>All sales are final once the design process has been started. In other words, refunds will be unavailable once your design has been started.</p>
-                      <p className="mt-2">You can always contact me with any questions at <a href="mailto:benfriedman30@gmail.com" className="text-blue-600 font-semibold hover:underline">benfriedman30@gmail.com</a>. If you made a mistake while purchasing contact me and I will do my best to help.</p>
+                      <p className="mt-2">You can always contact me with any questions at <a href="mailto:contact@bfgraphix.com" className="text-blue-600 font-semibold hover:underline">contact@bfgraphix.com</a>. If you made a mistake while purchasing contact me and I will do my best to help.</p>
                     </div>
                   </div>
                 )}

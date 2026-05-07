@@ -129,7 +129,7 @@ export default function ContactSection() {
                 {isSending ? 'Sending...' : 'Send'}
               </button>
               <p className="text-slate-600 text-sm font-medium">
-                Or email <a href="mailto:benfriedman30@gmail.com" className="text-slate-900 font-bold hover:underline">benfriedman30@gmail.com</a>
+                Or email <a href="mailto:contact@bfgraphix.com" className="text-slate-900 font-bold hover:underline">contact@bfgraphix.com</a>
               </p>
             </div>
           </form>
