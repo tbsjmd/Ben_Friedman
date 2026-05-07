@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import ReCAPTCHA from 'react-google-recaptcha';
 
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyP_AbMlC7iFRIIHJUTpGCbEXJnB34KXkeocJxhfzRzTWrpHv2OZQ-DqZrPQLW5cya5Rw/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby3MnATGGFyTlFWpk2uMXkjGpWGbZOym-6mvEQZm7Fcp3aQB97JJPDefV1-pS9Qfivr/exec';
 
 export default function ContactSection() {
   const [name, setName] = useState('');

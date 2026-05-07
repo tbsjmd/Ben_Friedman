@@ -64,7 +64,7 @@ export default function OrderSection() {
   useEffect(() => {
     const fetchPromos = async () => {
       try {
-        const response = await fetch('https://script.google.com/macros/s/AKfycbyP_AbMlC7iFRIIHJUTpGCbEXJnB34KXkeocJxhfzRzTWrpHv2OZQ-DqZrPQLW5cya5Rw/exec');
+        const response = await fetch('https://script.google.com/macros/s/AKfycby3MnATGGFyTlFWpk2uMXkjGpWGbZOym-6mvEQZm7Fcp3aQB97JJPDefV1-pS9Qfivr/exec');
         const data = await response.json();
         if (data.codes) {
           setValidPromoCodes(data.codes);
@@ -92,7 +92,7 @@ export default function OrderSection() {
       window.history.replaceState({}, document.title, window.location.pathname);
       
       // Notify Apps Script to confirm order
-      fetch('https://script.google.com/macros/s/AKfycbyP_AbMlC7iFRIIHJUTpGCbEXJnB34KXkeocJxhfzRzTWrpHv2OZQ-DqZrPQLW5cya5Rw/exec', {
+      fetch('https://script.google.com/macros/s/AKfycby3MnATGGFyTlFWpk2uMXkjGpWGbZOym-6mvEQZm7Fcp3aQB97JJPDefV1-pS9Qfivr/exec', {
         method: 'POST',
         body: JSON.stringify({ action: 'confirm_order', orderNumber: orderId }),
         headers: {
@@ -168,7 +168,7 @@ export default function OrderSection() {
     };
 
     try {
-      const response = await fetch('https://script.google.com/macros/s/AKfycbyP_AbMlC7iFRIIHJUTpGCbEXJnB34KXkeocJxhfzRzTWrpHv2OZQ-DqZrPQLW5cya5Rw/exec', {
+      const response = await fetch('https://script.google.com/macros/s/AKfycby3MnATGGFyTlFWpk2uMXkjGpWGbZOym-6mvEQZm7Fcp3aQB97JJPDefV1-pS9Qfivr/exec', {
         method: 'POST',
         body: JSON.stringify(orderData),
         headers: {
