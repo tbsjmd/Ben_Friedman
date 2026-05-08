@@ -37,10 +37,10 @@ export default function Hero() {
           style={{ opacity }}
         >
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight mb-4 text-slate-900 leading-tight drop-shadow-sm">
-            Ben Friedman
+            BF Graphix
           </h1>
           <p className="text-lg md:text-xl text-slate-800 mb-10 max-w-2xl mx-auto leading-relaxed font-semibold">
-            16 year old Graphic Designer
+            Graphic Design
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
