@@ -30,7 +30,7 @@ export default function AdditionalPayment() {
       window.history.replaceState({}, document.title, window.location.pathname);
       
       // Notify Apps Script to confirm additional order
-      fetch('https://script.google.com/macros/s/AKfycby3MnATGGFyTlFWpk2uMXkjGpWGbZOym-6mvEQZm7Fcp3aQB97JJPDefV1-pS9Qfivr/exec', {
+      fetch('https://script.google.com/macros/s/AKfycbyP_AbMlC7iFRIIHJUTpGCbEXJnB34KXkeocJxhfzRzTWrpHv2OZQ-DqZrPQLW5cya5Rw/exec', {
         method: 'POST',
         body: JSON.stringify({ action: 'confirm_additional', orderNumber: pOrder, amount: pPrice }),
         headers: {
@@ -53,7 +53,7 @@ export default function AdditionalPayment() {
   const handleGenerateCheckout = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('https://script.google.com/macros/s/AKfycby3MnATGGFyTlFWpk2uMXkjGpWGbZOym-6mvEQZm7Fcp3aQB97JJPDefV1-pS9Qfivr/exec', {
+      const response = await fetch('https://script.google.com/macros/s/AKfycbyP_AbMlC7iFRIIHJUTpGCbEXJnB34KXkeocJxhfzRzTWrpHv2OZQ-DqZrPQLW5cya5Rw/exec', {
         method: 'POST',
         body: JSON.stringify({
           action: 'create_additional_checkout',
